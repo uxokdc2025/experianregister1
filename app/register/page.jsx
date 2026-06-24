@@ -174,12 +174,10 @@ function BoostChart() {
         <path d={line(boost)} fill="none" stroke="var(--color-pink-400)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="1500" strokeDashoffset={draw ? 0 : 1500} style={{ transition: 'stroke-dashoffset 1.5s var(--ease-default)' }} />
         {boost.map((v, i) => <circle key={i} cx={x(i)} cy={y(v)} r="3.4" fill="var(--color-pink-400)" style={{ opacity: draw ? 1 : 0, transition: `opacity .3s ease ${0.5 + i * 0.09}s` }} />)}
         {base.map((v, i) => <circle key={i} cx={x(i)} cy={y(v)} r="2.6" fill="#9A9AAE" style={{ opacity: draw ? 1 : 0, transition: 'opacity .6s ease .3s' }} />)}
-        {draw && (
-          <g transform={`translate(${markX - 44}, ${y(25) - 30})`}>
-            <rect width="88" height="24" rx="12" fill="var(--color-pink-400)" />
-            <text x="44" y="16" textAnchor="middle" fontSize="12" fontWeight="700" fill="#fff" fontFamily="var(--font-sans)">Boost added</text>
-          </g>
-        )}
+        <g transform={`translate(${markX - 44}, ${y(25) - 30})`} style={{ opacity: draw ? 1 : 0, transform: draw ? `translate(${markX - 44}px, ${y(25) - 30}px) scale(1)` : `translate(${markX - 44}px, ${y(25) - 30}px) scale(.4)`, transformOrigin: `${markX}px ${y(25) - 18}px`, transition: 'opacity .4s ease 1s, transform .5s cubic-bezier(.34,1.56,.64,1) 1s' }}>
+          <rect width="88" height="24" rx="12" fill="var(--color-pink-400)" />
+          <text x="44" y="16" textAnchor="middle" fontSize="12" fontWeight="700" fill="#fff" fontFamily="var(--font-sans)">Boost added</text>
+        </g>
         {days.map((d, i) => <text key={d} x={x(i)} y={H - padB + 18} textAnchor="middle" fontSize="9.5" fill="#9A9AAE" fontFamily="var(--font-sans)">{d}</text>)}
       </svg>
     </div>
