@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { Confetti, SuccessContent } from '../../components/Confetti'
 
 const PINK = 'var(--color-pink-400)'
 
@@ -648,18 +649,19 @@ function FoundBody({ onClose, onVerify }) {
 }
 
 function IdentityDrawer({ open, onClose, onVerify }) {
-  const [phase, setPhase] = useState('ssn')
-  useEffect(() => { if (open) setPhase('ssn') }, [open])
-  useEffect(() => {
-    if (phase === 'loading') { const t = setTimeout(() => setPhase('found'), 2200); return () => clearTimeout(t) }
-  }, [phase])
+  const [phase, setPhase] = useState('found')
+  useEffect(() => { if (open) setPhase('found') }, [open])
   return (
     <>
-      <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(40,40,70,.45)', zIndex: 200, opacity: open ? 1 : 0, pointerEvents: open ? 'auto' : 'none', transition: 'opacity .25s' }} />
-      <aside style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 560, maxWidth: '92vw', background: '#fff', zIndex: 201, boxShadow: '-8px 0 40px rgba(0,0,0,.18)', transform: open ? 'translateX(0)' : 'translateX(100%)', transition: 'transform .3s var(--ease-default)', display: 'flex', flexDirection: 'column' }}>
-        {phase === 'ssn' && <SsnBody onClose={onClose} onContinue={() => setPhase('loading')} />}
-        {phase === 'loading' && <LoadingBody />}
-        {phase === 'found' && <FoundBody onClose={onClose} onVerify={onVerify} />}
+      <div onClick={phase === 'celebrate' ? undefined : onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(40,40,70,.45)', zIndex: 200, opacity: open ? 1 : 0, pointerEvents: open ? 'auto' : 'none', transition: 'opacity .25s' }} />
+      <aside style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 560, maxWidth: '92vw', background: '#fff', zIndex: 201, boxShadow: '-8px 0 40px rgba(0,0,0,.18)', transform: open ? 'translateX(0)' : 'translateX(100%)', transition: 'transform .35s var(--ease-default)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        {phase === 'found' && <FoundBody onClose={onClose} onVerify={() => setPhase('celebrate')} />}
+        {phase === 'celebrate' && (
+          <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 40, overflow: 'hidden' }}>
+            <Confetti />
+            <SuccessContent onDone={onVerify} />
+          </div>
+        )}
       </aside>
     </>
   )
@@ -698,6 +700,10 @@ function RegisterApp() {
     if (step === 'otp') setSlide(1)
     else if (step === 'passkey') setSlide(2)
     else if (step === 'phone') setSlide(0)
+  }, [step])
+
+  useEffect(() => {
+    if (step === 'dash-locked') { const t = setTimeout(() => setDrawer(true), 650); return () => clearTimeout(t) }
   }, [step])
 
   const isAuth = ['phone', 'otp', 'passkey'].includes(step)
