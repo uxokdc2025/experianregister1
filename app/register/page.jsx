@@ -259,30 +259,28 @@ function AuthPhone({ onNext }) {
   )
 }
 
-function AuthOtp({ onNext }) {
-  const [d, setD] = useState(['', '', '', '', '', ''])
-  const refs = useRef([])
-  const full = d.every(x => x !== '')
-  const set = (i, val) => {
-    if (!/^\d?$/.test(val)) return
-    const nd = [...d]; nd[i] = val; setD(nd)
-    if (val && i < 5) refs.current[i + 1]?.focus()
-  }
-  const key = (i, e) => { if (e.key === 'Backspace' && !d[i] && i > 0) refs.current[i - 1]?.focus() }
+function AuthBirthday({ onNext }) {
+  const [v, setV] = useState('')
+  const [focus, setFocus] = useState(false)
+  const float = focus || v !== ''
   return (
     <div style={{ maxWidth: 380 }}>
       <RegLogo size={30} />
-      <h1 style={{ fontSize: 34, fontWeight: 800, color: 'var(--color-neutral-800)', letterSpacing: '-.02em', lineHeight: 1.12, marginTop: 70 }}>Check your text<br />messages</h1>
-      <p style={{ fontSize: 15, color: 'var(--color-neutral-700)', marginTop: 14 }}>We have sent to code to *** *** *687</p>
-      <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-neutral-800)', marginTop: 40, marginBottom: 14 }}>Enter your 6 digit code</div>
-      <div style={{ display: 'flex', gap: 10 }}>
-        {d.map((x, i) => (
-          <input key={i} ref={el => refs.current[i] = el} value={x} onChange={e => set(i, e.target.value)} onKeyDown={e => key(i, e)} inputMode="numeric" maxLength={1}
-            style={{ width: 52, height: 56, textAlign: 'center', fontSize: 22, fontWeight: 700, border: `1px solid ${x ? PINK : 'var(--color-neutral-300)'}`, borderRadius: 8, fontFamily: 'inherit', color: 'var(--color-neutral-800)', outline: 'none' }} />
-        ))}
+      <h1 style={{ fontSize: 36, fontWeight: 800, color: 'var(--color-neutral-800)', letterSpacing: '-.02em', lineHeight: 1.12, marginTop: 54 }}>We recognize you.</h1>
+      <p style={{ fontSize: 15, color: 'var(--color-neutral-600)', lineHeight: 1.5, marginTop: 18 }}>We matched your number. Confirm your birthday to pull your credit details.</p>
+      <div style={{ position: 'relative', marginTop: 40 }}>
+        <label style={{ position: 'absolute', left: 15, pointerEvents: 'none', whiteSpace: 'nowrap', top: float ? 9 : '50%', transform: float ? 'none' : 'translateY(-50%)', fontSize: float ? 11 : 15, fontWeight: float ? 700 : 400, color: focus ? PINK : 'var(--color-neutral-500)', transition: 'top .15s var(--ease-default), font-size .15s var(--ease-default), color .15s' }}>Birthday</label>
+        <input value={v} onChange={e => setV(e.target.value)} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
+          style={{ width: '100%', height: 58, border: `1.5px solid ${focus ? PINK : 'var(--color-neutral-200)'}`, borderRadius: 8, padding: float ? '22px 15px 0' : '0 15px', fontSize: 15, fontFamily: 'inherit', color: 'var(--color-neutral-800)', outline: 'none', transition: 'border-color .15s' }} />
       </div>
-      <div style={{ marginTop: 18 }}><SolidBtn disabled={!full} onClick={onNext}>Confirm Code</SolidBtn></div>
-      <div style={{ textAlign: 'center', fontSize: 13.5, fontWeight: 700, color: 'var(--color-neutral-800)', marginTop: 22 }}>Didn&#39;t receive code ? <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Resend</a></div>
+      <div style={{ marginTop: 14 }}><SolidBtn disabled={!v.trim()} onClick={onNext}>See my details</SolidBtn></div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '26px 0' }}>
+        <div style={{ flex: 1, height: 1, background: 'var(--color-neutral-200)' }} />
+        <span style={{ fontSize: 13, color: 'var(--color-neutral-500)' }}>or</span>
+        <div style={{ flex: 1, height: 1, background: 'var(--color-neutral-200)' }} />
+      </div>
+      <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 700, color: 'var(--color-neutral-800)' }}>Already have an account ? <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Sign in</a></div>
+      <p style={{ fontSize: 12.5, color: 'var(--color-neutral-500)', lineHeight: 1.55, textAlign: 'center', marginTop: 26 }}>By continuing you agree to our <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Terms of Use</a> and <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Privacy Policy</a>. Standard message rates may apply.</p>
     </div>
   )
 }
@@ -687,7 +685,7 @@ function RegisterApp() {
       setStep(p)
     } else if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem('exp_reg_step')
-      if (saved) setStep(saved)
+      if (saved) setStep(saved === 'otp' ? 'birthday' : saved)
     }
     if (searchParams.get('drawer') === '1') setDrawer(true)
   }, [])
@@ -697,8 +695,8 @@ function RegisterApp() {
   }, [step])
 
   useEffect(() => {
-    if (step === 'otp') setSlide(1)
-    else if (step === 'passkey') setSlide(2)
+    if (step === 'birthday') setSlide(2)
+    else if (step === 'passkey') setSlide(1)
     else if (step === 'phone') setSlide(0)
   }, [step])
 
@@ -706,7 +704,7 @@ function RegisterApp() {
     if (step === 'dash-locked') { const t = setTimeout(() => setDrawer(true), 650); return () => clearTimeout(t) }
   }, [step])
 
-  const isAuth = ['phone', 'otp', 'passkey'].includes(step)
+  const isAuth = ['phone', 'birthday', 'passkey'].includes(step)
 
   if (isAuth) {
     return (
@@ -714,8 +712,8 @@ function RegisterApp() {
         <div style={{ display: 'grid', gridTemplateColumns: '1.32fr 1fr', gap: 0, maxWidth: 1340, margin: '0 auto', minHeight: 'calc(100vh - 48px)' }}>
           <BenefitPanel slide={slide} setSlide={setSlide} />
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 56px' }}>
-            {step === 'phone' && <AuthPhone onNext={() => setStep('otp')} />}
-            {step === 'otp' && <AuthOtp onNext={() => setStep('passkey')} />}
+            {step === 'phone' && <AuthPhone onNext={() => setStep('birthday')} />}
+            {step === 'birthday' && <AuthBirthday onNext={() => setStep('passkey')} />}
             {step === 'passkey' && <AuthPasskey onNext={() => setStep('dash-locked')} />}
           </div>
         </div>
