@@ -30,7 +30,7 @@ function PhoneIcon() {
 const OPTIONS = [
   {
     key: 'desktop',
-    href: '/desktop',
+    href: '/register?step=phone',
     Icon: MonitorIcon,
     label: 'Desktop',
     desc: 'Walk through the re-imagined registration on a full desktop screen.',

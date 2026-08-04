@@ -250,13 +250,8 @@ function AuthPhone({ onNext }) {
         <input value={v} onChange={e => setV(e.target.value)} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} inputMode="tel"
           style={{ width: '100%', height: 58, border: `1.5px solid ${focus ? PINK : 'var(--color-neutral-200)'}`, borderRadius: 8, padding: float ? '22px 15px 0' : '0 15px', fontSize: 15, fontFamily: 'inherit', color: 'var(--color-neutral-800)', outline: 'none', transition: 'border-color .15s' }} />
       </div>
-      <div style={{ marginTop: 14 }}><SolidBtn disabled={!v.trim()} onClick={onNext}>Send my Code</SolidBtn></div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '26px 0' }}>
-        <div style={{ flex: 1, height: 1, background: 'var(--color-neutral-200)' }} />
-        <span style={{ fontSize: 13, color: 'var(--color-neutral-500)' }}>or</span>
-        <div style={{ flex: 1, height: 1, background: 'var(--color-neutral-200)' }} />
-      </div>
-      <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 700, color: 'var(--color-neutral-800)' }}>Already have an account ? <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Sign in</a></div>
+      <div style={{ marginTop: 14 }}><SolidBtn disabled={!v.trim()} onClick={onNext}>Get started</SolidBtn></div>
+      <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 700, color: 'var(--color-neutral-800)', marginTop: 22 }}>Already have an account ? <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Sign in</a></div>
       <p style={{ fontSize: 12.5, color: 'var(--color-neutral-500)', lineHeight: 1.55, textAlign: 'center', marginTop: 26 }}>
         By continuing you agree to our <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Terms of Use</a> and <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Privacy Policy</a>. Standard message rates may apply.</p>
     </div>

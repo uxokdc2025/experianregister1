@@ -245,8 +245,16 @@ input::placeholder { color: var(--color-neutral-400); }
 }
 @keyframes expSpin { to { transform: rotate(360deg); } }
 
+.confetti-piece { position: absolute; top: -12px; border-radius: 2px; opacity: 0; animation: confettiFall linear infinite; will-change: transform, opacity; }
+@keyframes confettiFall {
+  0%   { transform: translateY(-12px) translateX(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.9; }
+  100% { transform: translateY(620px) translateX(var(--drift, 0px)) rotate(var(--rot, 360deg)); opacity: 0; }
+}
+.celebrate-pop { animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+
 @media (prefers-reduced-motion: reduce) {
-  .pulse-dot::after, .shield-float, .pop-in, .intro-rise, .exp-spinner { animation: none !important; }
+  .pulse-dot::after, .shield-float, .pop-in, .intro-rise, .exp-spinner, .confetti-piece, .celebrate-pop { animation: none !important; }
 }
 
 ::-webkit-scrollbar { width: 10px; }
