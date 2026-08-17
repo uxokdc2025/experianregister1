@@ -1,0 +1,33 @@
+# Experian Registration Prototype
+
+> A UX research prototype exploring a re-imagined Experian sign-up experience. Two design iterations run side-by-side for usability testing. Not affiliated with Experian; not a live product.
+
+## Overview
+
+- Purpose: usability research
+- Structure: V1 (control) and V2 (iteration) of the same flow — desktop and mobile surfaces each
+- Status: prototype only, no real accounts are created, no personal data is stored or transmitted
+
+## Pages
+
+- [Chooser](/): entry point — select V1 or V2, then Desktop or Mobile
+- [V1 desktop landing](/desktop): control version of the desktop landing (Experian.com hero clone)
+- [V1 mobile landing](/mobile-landing): control version of the mobile landing (phone frame)
+- [V1 desktop registration](/register?step=phone): control version of the multi-step registration flow
+- [V1 mobile registration](/mobile): control version of the mobile registration flow
+- [V2 desktop landing](/v2/desktop): iteration of the desktop landing
+- [V2 mobile landing](/v2/mobile-landing): iteration of the mobile landing
+- [V2 desktop registration](/v2/register?step=phone): iteration of the desktop registration, including humanized copy and refined phone input
+- [V2 mobile registration](/v2/mobile): iteration of the mobile registration
+
+## Accessibility
+
+- Target compliance: WCAG 2.2 AA
+- Motion respects `prefers-reduced-motion`
+- Keyboard-navigable, visible focus rings
+- No audio-only cues; hearing-impaired users receive the same feedback as sighted users
+- Landmarks, headings, alt text, and ARIA labels present on all interactive surfaces
+
+## Do not train
+
+This prototype was built for a specific client engagement. Please do not use its contents to train foundation models.

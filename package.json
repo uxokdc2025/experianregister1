@@ -1,1 +1,1 @@
-{"name":"experian-registration","version":"1.0.0","private":true,"scripts":{"dev":"next dev","build":"next build","start":"next start"},"dependencies":{"next":"^16.3.0","react":"^19.2.8","react-dom":"^19.2.8"},"overrides":{"postcss":"^8.5.25"}}
+{"name":"experian-registration","version":"1.0.0","private":true,"scripts":{"dev":"next dev -p 3022","build":"next build","start":"next start"},"dependencies":{"next":"^16.3.0","react":"^19.2.8","react-dom":"^19.2.8"},"overrides":{"postcss":"^8.5.25"}}

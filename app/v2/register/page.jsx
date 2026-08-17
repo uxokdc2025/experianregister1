@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useRef, useId, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Confetti, SuccessContent } from '../../components/Confetti'
+import { Confetti, SuccessContent } from '../../../components/Confetti'
 
 const PINK = 'var(--color-pink-400)'
 
@@ -80,24 +80,28 @@ function SlideHead({ badge, title, sub }) {
 function BenefitProtection() {
   return (
     <>
-      <SlideHead badge="ALWAYS ON" title={<>Protection that never sleeps<br/>watching 24/7</>} sub={<>We scan the dark web, monitor your credit file, and put you<br/>back in control the instant anything looks wrong - all free.</>} />
+      <SlideHead badge="ALWAYS ON" title={<>We watch your credit<br/>so you don't have to.</>} sub={<>Dark-web scans and credit-file alerts.<br/>When something's off, you'll know first. Free.</>} />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr 1fr', gap: 16, margin: '40px auto 0', maxWidth: 560, alignItems: 'stretch' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <MiniCard title="Dark web scan" sub="Free scan included" />
-          <MiniCard title="Fraud alert" sub="1-year protection" />
+          <MiniCard title="Dark web scan" sub="We check the leaks for your info." />
+          <MiniCard title="Fraud alert" sub="Puts lenders on notice for a year." />
         </div>
-        <div style={{ background: '#E3E3F2', borderRadius: 18, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '22px 14px', gap: 14 }}>
+        <div style={{ background: '#E3E3F2', borderRadius: 18, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '22px 14px', gap: 12 }}>
           <div className="shield-float"><BIco.shield /></div>
-          <div style={{ fontSize: 12.5, color: 'var(--color-neutral-600)', textAlign: 'center', lineHeight: 1.4 }}>All system clear not threat detected</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span className="pulse-dot" style={{ width: 9, height: 9, borderRadius: '50%', background: 'var(--color-success-500)', flexShrink: 0 }} />
+            <span style={{ fontSize: 14.5, fontWeight: 700, color: 'var(--color-neutral-800)' }}>Secured</span>
+          </div>
+          <div style={{ fontSize: 12.5, color: 'var(--color-neutral-600)', textAlign: 'center', lineHeight: 1.4 }}>Nothing to worry<br/>about right now.</div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <MiniCard title="Credit freeze" sub="One tap , instant" />
-          <MiniCard title="Dispute center" sub="Fix error free" />
+          <MiniCard title="Credit freeze" sub={<>Lock new credit<br/>with one tap.</>} />
+          <MiniCard title="Dispute center" sub={<>Challenge errors<br/>on your report.</>} />
         </div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, margin: '42px auto 0', maxWidth: 600 }}>
-        <FeatureRow tile="#E7F7EE" icon={<BIco.globe />} title="Free dark web scan" desc="Scan for your SSN, phone number , and email instantly" />
-        <FeatureRow tile="#E7F7EE" icon={<BIco.lock />} title="Credit freeze & fraud alert" desc="Block new accounts or add a warning - both free both instant" />
+        <FeatureRow tile="#E7F7EE" icon={<BIco.globe />} title="Free dark-web scan" desc={<>We check known leaks for<br/>your SSN, phone, and email.</>} />
+        <FeatureRow tile="#E7F7EE" icon={<BIco.lock />} title="Credit freeze & fraud alert" desc={<>Block new accounts, or flag<br/>your file for lenders. Both free.</>} />
       </div>
     </>
   )
@@ -112,8 +116,8 @@ function PinkGauge({ score = 724, size = 300 }) {
   const path = `M ${startX} ${arcY} A ${r} ${r} 0 0 1 ${endX} ${arcY}`
   const labels = ['Fair', 'Good', 'Very Good', 'Exceptional']
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 18 }}>
-      <svg role="img" aria-label={`FICO Score ${score}, in the Good range`} width={size} height={arcY + 26} style={{ overflow: 'visible' }}>
+    <div role="img" aria-label={`FICO Score ${score}, in the Good range`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 18 }}>
+      <svg aria-hidden="true" width={size} height={arcY + 26} style={{ overflow: 'visible' }}>
         <path d={path} fill="none" stroke="#D9D9DE" strokeWidth={strokeW} strokeLinecap="round" />
         <path d={path} fill="none" stroke="var(--color-pink-400)" strokeWidth={strokeW} strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={draw ? circ * (1 - pct) : circ} style={{ transition: 'stroke-dashoffset 1.2s var(--ease-default)' }} />
         <text x={cx} y={arcY - 26} textAnchor="middle" fill="var(--color-neutral-800)" fontSize="58" fontWeight="800" fontFamily="var(--font-sans)" style={{ opacity: draw ? 1 : 0, transition: 'opacity .6s ease .3s' }}>{score}</text>
@@ -134,11 +138,11 @@ function PinkGauge({ score = 724, size = 300 }) {
 function BenefitFico() {
   return (
     <>
-      <SlideHead badge="FREE FOREVER" title={<>Know your real FICO Score<br/>the one lenders actually use</>} sub={<>Get your free Experian credit report and FICO Score 8, the same<br/>score 90% of top lenders use, updated daily at no cost.</>} />
+      <SlideHead badge="FREE FOREVER" title={<>The FICO Score lenders<br/>actually pull.</>} sub={<>FICO Score 8. The version 90% of top lenders use.<br/>Refreshed every day, free.</>} />
       <PinkGauge score={724} size={300} />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, margin: '40px auto 0', maxWidth: 600 }}>
-        <FeatureRow tile="#FAE9F2" icon={<BIco.trend />} title="Daily score updates" desc="See changes the moment they happen , no surprises" />
-        <FeatureRow tile="#EBF1FA" icon={<BIco.report />} title="Free Experian credit report" desc="Full report, dispute inaccuracies for free anytime" />
+        <FeatureRow tile="#FAE9F2" icon={<BIco.trend />} title="Daily score updates" desc="See a shift the same day it happens." />
+        <FeatureRow tile="#EBF1FA" icon={<BIco.report />} title="Free Experian credit report" desc="Full report. Disputing an error costs nothing." />
       </div>
     </>
   )
@@ -159,8 +163,8 @@ function BoostChart() {
   const area = `${line(boost)} L ${x(boost.length - 1)} ${y(0)} L ${x(0)} ${y(0)} Z`
   const markX = x(8)
   return (
-    <div style={{ background: '#fff', borderRadius: 16, padding: '20px 18px 10px', boxShadow: 'var(--shadow-sm)', maxWidth: 600, margin: '24px auto 0' }}>
-      <svg role="img" aria-label="Chart: FICO Score rose over 11 days after adding Experian Boost" width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display: 'block' }}>
+    <div role="img" aria-label="Chart: FICO Score rose from 2 to 28 points over 11 days after adding Experian Boost" style={{ background: '#fff', borderRadius: 16, padding: '20px 18px 10px', boxShadow: 'var(--shadow-sm)', maxWidth: 600, margin: '24px auto 0' }}>
+      <svg aria-hidden="true" width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display: 'block' }}>
         {[0, 5, 10, 15, 20, 25, 30, 35, 40, 45].map(v => (
           <g key={v}>
             <line x1={padL} y1={y(v)} x2={W - padR} y2={y(v)} stroke="#EEE" strokeWidth="1" strokeDasharray="3 4" />
@@ -188,11 +192,11 @@ function BoostChart() {
 function BenefitBoost() {
   return (
     <>
-      <SlideHead badge="EXPERIAN BOOST" title={<>Raise your score just by paying<br/>the bills you already pay</>} sub={<>Connect your bank account and we'll find rent, utilities streaming,<br/>and phone payments that can lift your FICO Score instantly.</>} />
+      <SlideHead badge="EXPERIAN BOOST" title={<>Get credit for the bills<br/>you already pay.</>} sub={<>Connect your bank. We pull the rent, utility, streaming, and<br/>phone payments that count toward your FICO Score.</>} />
       <BoostChart />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, margin: '34px auto 0', maxWidth: 600 }}>
-        <FeatureRow tile="#FAE9F2" icon={<BIco.bolt />} title="Instant results in minutes" desc="Cell phones utilities rent, streaming - they all count" />
-        <FeatureRow tile="#EBF1FA" icon={<BIco.bank />} title="Smart Money checking" desc="No monthly fee. $50 bonus with direct deposits" />
+        <FeatureRow tile="#FAE9F2" icon={<BIco.bolt />} title="Results in minutes" desc={<>Rent, streaming, and<br/>utility bills count.</>} />
+        <FeatureRow tile="#EBF1FA" icon={<BIco.bank />} title="Smart Money checking" desc={<>No fees, plus $50 for<br/>direct deposit.</>} />
       </div>
     </>
   )
@@ -237,51 +241,147 @@ function SolidBtn({ children, disabled, onClick }) {
   )
 }
 
+function formatUSPhone(raw) {
+  const d = raw.replace(/\D/g, '').slice(0, 10)
+  if (d.length <= 3) return d
+  if (d.length <= 6) return `(${d.slice(0, 3)}) ${d.slice(3)}`
+  return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`
+}
+
 function AuthPhone({ onNext }) {
   const [v, setV] = useState('')
   const [focus, setFocus] = useState(false)
+  const digits = v.replace(/\D/g, '')
+  const isValid = digits.length === 10
   const float = focus || v !== ''
+  const submit = () => {
+    if (!isValid) return
+    if (typeof window !== 'undefined') localStorage.setItem('exp_reg_phone', v)
+    onNext()
+  }
   return (
-    <div style={{ maxWidth: 380 }}>
+    <form onSubmit={(e) => { e.preventDefault(); submit() }} style={{ maxWidth: 380 }}>
       <RegLogo size={30} />
       <h1 style={{ fontSize: 36, fontWeight: 800, color: 'var(--color-neutral-800)', letterSpacing: '-.02em', lineHeight: 1.12, marginTop: 54 }}>See your free<br />credit score.</h1>
-      <p style={{ fontSize: 15, color: 'var(--color-neutral-600)', lineHeight: 1.5, marginTop: 18 }}>Join 100 million people who trust Experian to understand protect and improve their financial health.</p>
-      <div style={{ position: 'relative', marginTop: 40 }}>
-        <label htmlFor="v1-phone" style={{ position: 'absolute', left: 15, pointerEvents: 'none', whiteSpace: 'nowrap', top: float ? 9 : '50%', transform: float ? 'none' : 'translateY(-50%)', fontSize: float ? 11 : 15, fontWeight: float ? 700 : 400, color: focus ? PINK : 'var(--color-neutral-500)', transition: 'top .15s var(--ease-default), font-size .15s var(--ease-default), color .15s' }}>Mobile number</label>
-        <input id="v1-phone" value={v} onChange={e => setV(e.target.value)} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} inputMode="tel"
-          style={{ width: '100%', height: 58, border: `1.5px solid ${focus ? PINK : 'var(--color-neutral-200)'}`, borderRadius: 8, padding: float ? '22px 15px 0' : '0 15px', fontSize: 15, fontFamily: 'inherit', color: 'var(--color-neutral-800)', outline: 'none', transition: 'border-color .15s' }} />
+      <p style={{ fontSize: 15, color: 'var(--color-neutral-600)', lineHeight: 1.5, marginTop: 18 }}>Join 100 million people who trust Experian to understand, protect, and improve their financial health.</p>
+      <div style={{ display: 'flex', alignItems: 'stretch', marginTop: 40, height: 58, border: `1.5px solid ${focus ? PINK : 'var(--color-neutral-200)'}`, borderRadius: 8, overflow: 'hidden', transition: 'border-color .15s', background: '#fff' }}>
+        <button
+          type="button"
+          aria-label="Country: United States"
+          title="United States"
+          onClick={(e) => e.preventDefault()}
+          style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 12px', border: 'none', borderRight: '1px solid var(--color-neutral-200)', background: 'transparent', fontFamily: 'inherit', fontSize: 14, fontWeight: 700, color: 'var(--color-neutral-800)', cursor: 'pointer', flexShrink: 0 }}
+        >
+          <span style={{ fontSize: 20, lineHeight: 1 }} aria-hidden>🇺🇸</span>
+          <span>+1</span>
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </button>
+        <div style={{ position: 'relative', flex: 1 }}>
+          <label htmlFor="v2-phone" style={{ position: 'absolute', left: 14, pointerEvents: 'none', whiteSpace: 'nowrap', top: float ? 9 : '50%', transform: float ? 'none' : 'translateY(-50%)', fontSize: float ? 11 : 15, fontWeight: float ? 700 : 400, color: float ? 'var(--color-blue-500)' : 'var(--color-neutral-500)', transition: 'top .15s var(--ease-default), font-size .15s var(--ease-default), color .15s' }}>Mobile number</label>
+          <input
+            id="v2-phone"
+            value={v}
+            onChange={(e) => setV(formatUSPhone(e.target.value))}
+            onFocus={() => setFocus(true)}
+            onBlur={() => setFocus(false)}
+            inputMode="tel"
+            type="tel"
+            autoComplete="tel-national"
+            maxLength={14}
+            placeholder={float ? '(555) 555-1212' : ''}
+            style={{ width: '100%', height: '100%', border: 'none', padding: float ? '22px 14px 0' : '0 14px', fontSize: 15, fontFamily: 'inherit', color: 'var(--color-neutral-800)', outline: 'none', background: 'transparent' }}
+          />
+        </div>
       </div>
-      <div style={{ marginTop: 14 }}><SolidBtn disabled={!v.trim()} onClick={onNext}>Get started</SolidBtn></div>
-      <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 700, color: 'var(--color-neutral-800)', marginTop: 22 }}>Already have an account ? <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Sign in</a></div>
+      <div style={{ marginTop: 14 }}><SolidBtn disabled={!isValid} onClick={submit}>Get started</SolidBtn></div>
+      <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 700, color: 'var(--color-neutral-800)', marginTop: 22 }}>Already have an account? <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Sign in</a></div>
       <p style={{ fontSize: 12.5, color: 'var(--color-neutral-500)', lineHeight: 1.55, textAlign: 'center', marginTop: 26 }}>
         By continuing you agree to our <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Terms of Use</a> and <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Privacy Policy</a>. Standard message rates may apply.</p>
-    </div>
+      <button type="submit" tabIndex="-1" aria-label="Submit form" style={{ position: "absolute", left: "-9999px", opacity: 0, width: 1, height: 1 }} />
+    </form>
   )
+}
+
+function formatUSDate(raw) {
+  const d = raw.replace(/\D/g, '').slice(0, 8)
+  if (d.length <= 2) return d
+  if (d.length <= 4) return `${d.slice(0, 2)}/${d.slice(2)}`
+  return `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}`
+}
+
+function isValidBirthday(v) {
+  const d = v.replace(/\D/g, '')
+  if (d.length !== 8) return false
+  const mm = parseInt(d.slice(0, 2), 10)
+  const dd = parseInt(d.slice(2, 4), 10)
+  const yyyy = parseInt(d.slice(4), 10)
+  if (mm < 1 || mm > 12) return false
+  if (dd < 1 || dd > 31) return false
+  const now = new Date().getFullYear()
+  if (yyyy < 1900 || yyyy > now) return false
+  return true
 }
 
 function AuthBirthday({ onNext }) {
   const [v, setV] = useState('')
   const [focus, setFocus] = useState(false)
+  const digits = v.replace(/\D/g, '')
+  const isValid = isValidBirthday(v)
+  const hasError = digits.length === 8 && !isValid
   const float = focus || v !== ''
+  const submit = () => {
+    if (!isValid) return
+    if (typeof window !== 'undefined') localStorage.setItem('exp_reg_birthday', v)
+    onNext()
+  }
+  const borderColor = hasError
+    ? 'var(--color-error-500)'
+    : focus
+      ? PINK
+      : 'var(--color-neutral-200)'
+  const labelColor = hasError
+    ? 'var(--color-error-500)'
+    : float
+      ? 'var(--color-blue-500)'
+      : 'var(--color-neutral-500)'
   return (
-    <div style={{ maxWidth: 380 }}>
+    <form onSubmit={(e) => { e.preventDefault(); submit() }} style={{ maxWidth: 460 }}>
       <RegLogo size={30} />
-      <h1 style={{ fontSize: 36, fontWeight: 800, color: 'var(--color-neutral-800)', letterSpacing: '-.02em', lineHeight: 1.12, marginTop: 54 }}>We recognize you.</h1>
-      <p style={{ fontSize: 15, color: 'var(--color-neutral-600)', lineHeight: 1.5, marginTop: 18 }}>We matched your number. Confirm your birthday to pull your credit details.</p>
+      <h1 style={{ fontSize: 36, fontWeight: 800, color: 'var(--color-neutral-800)', letterSpacing: '-.02em', lineHeight: 1.12, marginTop: 54 }}>Your number checks out.</h1>
+      <p style={{ fontSize: 15, color: 'var(--color-neutral-600)', lineHeight: 1.5, marginTop: 18 }}>Confirm your birthday and we'll pull up your file.</p>
       <div style={{ position: 'relative', marginTop: 40 }}>
-        <label htmlFor="v1-birthday" style={{ position: 'absolute', left: 15, pointerEvents: 'none', whiteSpace: 'nowrap', top: float ? 9 : '50%', transform: float ? 'none' : 'translateY(-50%)', fontSize: float ? 11 : 15, fontWeight: float ? 700 : 400, color: focus ? PINK : 'var(--color-neutral-500)', transition: 'top .15s var(--ease-default), font-size .15s var(--ease-default), color .15s' }}>Birthday</label>
-        <input id="v1-birthday" value={v} onChange={e => setV(e.target.value)} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
-          style={{ width: '100%', height: 58, border: `1.5px solid ${focus ? PINK : 'var(--color-neutral-200)'}`, borderRadius: 8, padding: float ? '22px 15px 0' : '0 15px', fontSize: 15, fontFamily: 'inherit', color: 'var(--color-neutral-800)', outline: 'none', transition: 'border-color .15s' }} />
+        <label htmlFor="v2-birthday" style={{ position: 'absolute', left: 15, pointerEvents: 'none', whiteSpace: 'nowrap', top: float ? 9 : '50%', transform: float ? 'none' : 'translateY(-50%)', fontSize: float ? 11 : 15, fontWeight: float ? 700 : 400, color: labelColor, transition: 'top .15s var(--ease-default), font-size .15s var(--ease-default), color .15s' }}>Birthday</label>
+        <input
+          id="v2-birthday"
+          value={v}
+          onChange={(e) => setV(formatUSDate(e.target.value))}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
+          inputMode="numeric"
+          autoComplete="bday"
+          maxLength={10}
+          placeholder={float ? 'MM/DD/YYYY' : ''}
+          aria-invalid={hasError}
+          aria-describedby={hasError ? 'v2-birthday-error' : undefined}
+          style={{ width: '100%', height: 58, border: `1.5px solid ${borderColor}`, borderRadius: 8, padding: float ? '22px 15px 0' : '0 15px', fontSize: 15, fontFamily: 'inherit', color: 'var(--color-neutral-800)', outline: 'none', transition: 'border-color .15s' }}
+        />
       </div>
-      <div style={{ marginTop: 14 }}><SolidBtn disabled={!v.trim()} onClick={onNext}>See my details</SolidBtn></div>
+      {hasError && (
+        <p id="v2-birthday-error" role="alert" style={{ fontSize: 13, color: 'var(--color-error-500)', marginTop: 8, lineHeight: 1.45, display: 'flex', alignItems: 'center', gap: 6 }}>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden><circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.4"/><path d="M7 4.2v3.4M7 9.4v.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
+          Invalid birthday.
+        </p>
+      )}
+      <div style={{ marginTop: 14 }}><SolidBtn disabled={!isValid} onClick={submit}>See my credit report</SolidBtn></div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '26px 0' }}>
         <div style={{ flex: 1, height: 1, background: 'var(--color-neutral-200)' }} />
         <span style={{ fontSize: 13, color: 'var(--color-neutral-500)' }}>or</span>
         <div style={{ flex: 1, height: 1, background: 'var(--color-neutral-200)' }} />
       </div>
-      <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 700, color: 'var(--color-neutral-800)' }}>Already have an account ? <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Sign in</a></div>
+      <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 700, color: 'var(--color-neutral-800)' }}>Already have an account? <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Sign in</a></div>
       <p style={{ fontSize: 12.5, color: 'var(--color-neutral-500)', lineHeight: 1.55, textAlign: 'center', marginTop: 26 }}>By continuing you agree to our <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Terms of Use</a> and <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Privacy Policy</a>. Standard message rates may apply.</p>
-    </div>
+      <button type="submit" tabIndex="-1" aria-label="Submit form" style={{ position: "absolute", left: "-9999px", opacity: 0, width: 1, height: 1 }} />
+    </form>
   )
 }
 
@@ -299,16 +399,16 @@ function PasskeyRow({ icon, title, desc }) {
 
 function AuthPasskey({ onNext }) {
   return (
-    <div style={{ maxWidth: 380 }}>
+    <div style={{ maxWidth: 460 }}>
       <RegLogo size={30} />
-      <h1 style={{ fontSize: 34, fontWeight: 800, color: 'var(--color-neutral-800)', letterSpacing: '-.02em', marginTop: 70 }}>Setup Passkey</h1>
-      <p style={{ fontSize: 15, color: 'var(--color-neutral-700)', marginTop: 14 }}>Passkeys make it easy to login.</p>
+      <h1 style={{ fontSize: 34, fontWeight: 800, color: 'var(--color-neutral-800)', letterSpacing: '-.02em', marginTop: 70 }}>Set up your passkey.</h1>
+      <p style={{ fontSize: 15, color: 'var(--color-neutral-700)', marginTop: 14 }}>Sign in without a password. Your device handles the rest.</p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 38 }}>
-        <PasskeyRow icon={<RIco.faster />} title="Login Faster" desc="Unlike passwords, passkeys don't need to be remembered." />
-        <PasskeyRow icon={<RIco.shieldCheck />} title="Enhanced Security" desc="Passkeys provide the strongest level of protection against phishing." />
-        <PasskeyRow icon={<RIco.devices />} title="Multi-Device Support" desc="Passkeys can be accessed across different devices seamlessly." />
+        <PasskeyRow icon={<RIco.faster />} title="Faster sign-in" desc="Nothing to remember. Your device does the work." />
+        <PasskeyRow icon={<RIco.shieldCheck />} title="Phishing-resistant" desc="A passkey only works on the site it was made for." />
+        <PasskeyRow icon={<RIco.devices />} title="Works across your devices" desc="Your passkey syncs to the devices you already use." />
       </div>
-      <div style={{ marginTop: 46 }}><SolidBtn onClick={onNext}>Add Passkey</SolidBtn></div>
+      <div style={{ marginTop: 46 }}><SolidBtn onClick={onNext}>Set up passkey</SolidBtn></div>
       <div style={{ textAlign: 'center', fontSize: 13.5, fontWeight: 700, color: 'var(--color-neutral-800)', marginTop: 24 }}>Don&#39;t want to use a passkey? <a onClick={onNext} style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Skip for now</a></div>
     </div>
   )
@@ -516,8 +616,8 @@ function Dashboard({ unlocked, onGetStarted }) {
     <div style={{ background: '#fff', minHeight: '100%' }}>
       <DashNav />
       <div className={unlocked ? undefined : 'dash-locked'} onClickCapture={unlocked ? undefined : (e) => { if (e.target.closest('[data-lock]')) onGetStarted() }} style={{ maxWidth: 1320, margin: '0 auto', padding: '44px 40px 80px' }}>
-        <h1 style={{ fontSize: 36, fontWeight: 800, color: 'var(--color-neutral-900)', letterSpacing: '-.01em' }}>Hi, Good Morning{unlocked ? ' David' : ''} !</h1>
-        <p style={{ fontSize: 16, color: 'var(--color-neutral-500)', marginTop: 6 }}>Take a look at the big picture of your credit.</p>
+        <h1 style={{ fontSize: 36, fontWeight: 800, color: 'var(--color-neutral-900)', letterSpacing: '-.01em', filter: unlocked ? 'none' : 'blur(9px)', userSelect: unlocked ? 'auto' : 'none' }} aria-hidden={!unlocked}>Hi, Good Morning{unlocked ? ', David' : ''}!</h1>
+        <p style={{ fontSize: 16, color: 'var(--color-neutral-500)', marginTop: 6, filter: unlocked ? 'none' : 'blur(9px)', userSelect: unlocked ? 'auto' : 'none' }} aria-hidden={!unlocked}>Take a look at the big picture of your credit.</p>
         <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr 1fr', gap: 28, marginTop: 34, alignItems: 'start' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <SetupProgress unlocked={unlocked} />
@@ -608,6 +708,14 @@ function LoadingBody() {
 }
 
 function FoundBody({ onClose, onVerify }) {
+  const [savedPhone] = useState(() => {
+    if (typeof window === 'undefined') return ''
+    return localStorage.getItem('exp_reg_phone') || ''
+  })
+  const [savedDob] = useState(() => {
+    if (typeof window === 'undefined') return '08/23/1983'
+    return localStorage.getItem('exp_reg_birthday') || '08/23/1983'
+  })
   return (
     <>
       <div style={{ flex: 1, overflowY: 'auto', padding: '34px 40px 20px' }}>
@@ -623,8 +731,8 @@ function FoundBody({ onClose, onVerify }) {
             <FloatField label="Last name" value="Ross" />
           </div>
           <div className="intro-rise" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
-            <FloatField label="Date of birth" hint="MM/DD/YYYY" value="08/23/1983" />
-            <FloatField label="Phone number" />
+            <FloatField label="Date of birth" hint="MM/DD/YYYY" value={savedDob} />
+            <FloatField label="Phone number" value={savedPhone} />
           </div>
           <div className="intro-rise" style={{ display: 'grid', gridTemplateColumns: '2.2fr 1fr', gap: 18 }}>
             <FloatField label="Street address" value="732 Capouse Ave" />
@@ -696,8 +804,8 @@ function RegisterApp() {
   }, [step])
 
   useEffect(() => {
-    if (step === 'birthday') setSlide(2)
-    else if (step === 'passkey') setSlide(1)
+    if (step === 'birthday') setSlide(1)
+    else if (step === 'passkey') setSlide(2)
     else if (step === 'phone') setSlide(0)
   }, [step])
 

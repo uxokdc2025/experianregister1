@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useRef, useId } from 'react'
-import { Confetti, SuccessContent } from '../../components/Confetti'
+import { Confetti, SuccessContent } from '../../../components/Confetti'
 
 /* ──────────────────────────────────────────────────────────────
    Registration Re-imagined — MOBILE flow
@@ -16,6 +16,31 @@ const PINK = 'var(--color-pink-400)'
 const MW = 393, MH = 852
 const SAFE_BOTTOM = 26
 const go = (href) => window.location.assign(href)
+
+function formatUSPhone(raw) {
+  const d = raw.replace(/\D/g, '').slice(0, 10)
+  if (d.length <= 3) return d
+  if (d.length <= 6) return `(${d.slice(0, 3)}) ${d.slice(3)}`
+  return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`
+}
+function formatUSDate(raw) {
+  const d = raw.replace(/\D/g, '').slice(0, 8)
+  if (d.length <= 2) return d
+  if (d.length <= 4) return `${d.slice(0, 2)}/${d.slice(2)}`
+  return `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}`
+}
+function isValidBirthday(v) {
+  const d = v.replace(/\D/g, '')
+  if (d.length !== 8) return false
+  const mm = parseInt(d.slice(0, 2), 10)
+  const dd = parseInt(d.slice(2, 4), 10)
+  const yyyy = parseInt(d.slice(4), 10)
+  if (mm < 1 || mm > 12) return false
+  if (dd < 1 || dd > 31) return false
+  const now = new Date().getFullYear()
+  if (yyyy < 1900 || yyyy > now) return false
+  return true
+}
 
 /* ─────────────── Shell ─────────────── */
 function MobileFrame({ children }) {
@@ -204,29 +229,52 @@ const Ico = {
 /* ─────────────── Screen 1: phone ─────────────── */
 function MPhone({ onNext }) {
   const [v, setV] = useState('')
+  const [focus, setFocus] = useState(false)
+  const digits = v.replace(/\D/g, '')
+  const isValid = digits.length === 10
+  const float = focus || v !== ''
+  const submit = () => {
+    if (!isValid) return
+    if (typeof window !== 'undefined') localStorage.setItem('exp_reg_phone', v)
+    onNext()
+  }
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', background: '#F4F4FB' }}>
       <div style={{ padding: '14px 20px 0' }}>
         <div className="intro-rise"><MLogo size={26} /></div>
         <div className="intro-rise" style={{ textAlign: 'center', marginTop: 16 }}>
           <span style={{ display: 'inline-block', background: PINK, color: '#fff', fontSize: 10.5, fontWeight: 800, letterSpacing: '.08em', padding: '4px 12px', borderRadius: 9999 }}>ALWAYS ON</span>
-          <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--color-neutral-800)', lineHeight: 1.2, marginTop: 8 }}>Protection that never sleeps watching 24/7</h2>
+          <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--color-neutral-800)', lineHeight: 1.2, marginTop: 8 }}>We watch your credit so you don't have to.</h2>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 18 }}>
-          <PromoRow title="All system clear not threat detected" highlight delay={0.10} />
-          <PromoRow title="Dark web scan" sub="Free scan included" delay={0.16} />
-          <PromoRow title="Fraud alert" sub="1-year protection" delay={0.22} />
-          <PromoRow title="Credit freeze" sub="One tap , instant" delay={0.28} />
-          <PromoRow title="Dispute center" sub="Fix error free" delay={0.34} />
+          <PromoRow title="Nothing to worry about right now." highlight delay={0.10} />
+          <PromoRow title="Dark web scan" sub="We check the leaks for your info." delay={0.16} />
+          <PromoRow title="Fraud alert" sub="Puts lenders on notice for a year." delay={0.22} />
+          <PromoRow title="Credit freeze" sub="Lock new credit with one tap." delay={0.28} />
+          <PromoRow title="Dispute center" sub="Challenge errors on your report." delay={0.34} />
         </div>
         <div className="intro-rise" style={{ animationDelay: '.4s', marginTop: 18 }}><Dots active={0} /></div>
       </div>
-      <BottomSheet cta={<CTA disabled={!v.trim()} onClick={onNext}>Get started</CTA>}>
-        <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--color-neutral-800)', letterSpacing: '-.02em' }}>See your free credit score.</h1>
-        <p style={{ fontSize: 15, color: 'var(--color-neutral-700)', lineHeight: 1.5, marginTop: 12 }}>Join 100 million people who trust Experian to understand protect and improve their financial health.</p>
-        <div style={{ marginTop: 22 }}><FloatInput label="Mobile Number" value={v} setValue={setV} /></div>
-        <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 700, color: 'var(--color-neutral-800)', marginTop: 20 }}>Already have an account? <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Sign in</a></div>
-        <p style={{ fontSize: 12.5, color: 'var(--color-neutral-500)', lineHeight: 1.5, textAlign: 'center', marginTop: 18 }}>By continuing you agree to our <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Terms of Use</a> and <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Privacy Policy</a>. Standard message rates may apply.</p>
+      <BottomSheet cta={<CTA disabled={!isValid} onClick={submit}>Get started</CTA>}>
+        <form onSubmit={(e) => { e.preventDefault(); submit() }}>
+          <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--color-neutral-800)', letterSpacing: '-.02em' }}>See your free credit score.</h1>
+          <p style={{ fontSize: 15, color: 'var(--color-neutral-700)', lineHeight: 1.5, marginTop: 12 }}>Join 100 million people who trust Experian to understand, protect, and improve their financial health.</p>
+          <div style={{ display: 'flex', alignItems: 'stretch', marginTop: 22, height: 58, border: `1.5px solid ${focus ? PINK : 'var(--color-neutral-200)'}`, borderRadius: 10, overflow: 'hidden', background: '#fff', transition: 'border-color .15s' }}>
+            <button type="button" aria-label="Country: United States" title="United States" onClick={(e) => e.preventDefault()} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '0 10px', border: 'none', borderRight: '1px solid var(--color-neutral-200)', background: 'transparent', fontFamily: 'inherit', fontSize: 14, fontWeight: 700, color: 'var(--color-neutral-800)', cursor: 'pointer', flexShrink: 0 }}>
+              <span style={{ fontSize: 18, lineHeight: 1 }} aria-hidden>🇺🇸</span>
+              <span>+1</span>
+              <svg aria-hidden="true" width="9" height="9" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
+            <div style={{ position: 'relative', flex: 1 }}>
+              <label htmlFor="v2m-phone" style={{ position: 'absolute', left: 12, pointerEvents: 'none', whiteSpace: 'nowrap', top: float ? 9 : '50%', transform: float ? 'none' : 'translateY(-50%)', fontSize: float ? 10.5 : 15, fontWeight: float ? 700 : 400, color: float ? 'var(--color-blue-500)' : 'var(--color-neutral-500)', transition: 'top .15s var(--ease-default), font-size .15s var(--ease-default), color .15s' }}>Mobile number</label>
+              <input id="v2m-phone" value={v} onChange={(e) => setV(formatUSPhone(e.target.value))} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} inputMode="tel" type="tel" autoComplete="tel-national" maxLength={14} placeholder={float ? '(555) 555-1212' : ''}
+                style={{ width: '100%', height: '100%', border: 'none', padding: float ? '20px 12px 0' : '0 12px', fontSize: 15, fontFamily: 'inherit', color: 'var(--color-neutral-800)', outline: 'none', background: 'transparent' }} />
+            </div>
+          </div>
+          <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 700, color: 'var(--color-neutral-800)', marginTop: 20 }}>Already have an account? <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Sign in</a></div>
+          <p style={{ fontSize: 12.5, color: 'var(--color-neutral-500)', lineHeight: 1.5, textAlign: 'center', marginTop: 18 }}>By continuing you agree to our <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Terms of Use</a> and <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Privacy Policy</a>. Standard message rates may apply.</p>
+          <button type="submit" tabIndex="-1" aria-label="Submit form" style={{ position: "absolute", left: "-9999px", opacity: 0, width: 1, height: 1 }} />
+        </form>
       </BottomSheet>
     </div>
   )
@@ -235,27 +283,52 @@ function MPhone({ onNext }) {
 /* ─────────────── Screen 2: birthday ─────────────── */
 function MBirthday({ onNext }) {
   const [v, setV] = useState('')
+  const [focus, setFocus] = useState(false)
+  const digits = v.replace(/\D/g, '')
+  const isValid = isValidBirthday(v)
+  const hasError = digits.length === 8 && !isValid
+  const float = focus || v !== ''
+  const submit = () => {
+    if (!isValid) return
+    if (typeof window !== 'undefined') localStorage.setItem('exp_reg_birthday', v)
+    onNext()
+  }
+  const borderColor = hasError ? 'var(--color-error-500)' : focus ? PINK : 'var(--color-neutral-200)'
+  const labelColor = hasError ? 'var(--color-error-500)' : float ? 'var(--color-blue-500)' : 'var(--color-neutral-500)'
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', background: '#F4F4FB' }}>
       <div style={{ padding: '14px 20px 0' }}>
         <div className="intro-rise"><MLogo size={26} /></div>
         <div className="intro-rise" style={{ textAlign: 'center', marginTop: 16 }}>
           <span style={{ display: 'inline-block', background: PINK, color: '#fff', fontSize: 10.5, fontWeight: 800, letterSpacing: '.08em', padding: '4px 12px', borderRadius: 9999 }}>EXPERIAN BOOST</span>
-          <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--color-neutral-800)', lineHeight: 1.2, marginTop: 8 }}>Raise your score just by paying the bills you already pay</h2>
+          <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--color-neutral-800)', lineHeight: 1.2, marginTop: 8 }}>Get credit for the bills you already pay.</h2>
         </div>
         <div className="intro-rise" style={{ animationDelay: '.12s', marginTop: 18 }}><MBoostChart /></div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 20 }}>
-          <FeatureRow tile="#FAE9F2" icon={<Ico.bolt />} title="Instant results in minutes" desc="Cell phones utilities rent, streaming - they all count" delay={0.2} />
-          <FeatureRow tile="#EBF1FA" icon={<Ico.bank />} title="Smart Money checking" desc="No monthly fee. $50 bonus with direct deposits" delay={0.26} />
+          <FeatureRow tile="#FAE9F2" icon={<Ico.bolt />} title="Results in minutes" desc="Rent, streaming, and utility bills count." delay={0.2} />
+          <FeatureRow tile="#EBF1FA" icon={<Ico.bank />} title="Smart Money checking" desc="No fees, plus $50 for direct deposit." delay={0.26} />
         </div>
         <div className="intro-rise" style={{ animationDelay: '.32s', marginTop: 8 }}><Dots active={1} /></div>
       </div>
-      <BottomSheet cta={<CTA disabled={!v.trim()} onClick={onNext}>See my details</CTA>}>
-        <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--color-neutral-800)', letterSpacing: '-.02em' }}>We recognize you.</h1>
-        <p style={{ fontSize: 15, color: 'var(--color-neutral-700)', lineHeight: 1.5, marginTop: 12 }}>We matched your number. Confirm your birthday to pull your credit details.</p>
-        <div style={{ marginTop: 22 }}><FloatInput label="Birthday" value={v} setValue={setV} /></div>
-        <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 700, color: 'var(--color-neutral-800)', marginTop: 20 }}>Already have an account? <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Sign in</a></div>
-        <p style={{ fontSize: 12.5, color: 'var(--color-neutral-500)', lineHeight: 1.5, textAlign: 'center', marginTop: 18 }}>By continuing you agree to our <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Terms of Use</a> and <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Privacy Policy</a>. Standard message rates may apply.</p>
+      <BottomSheet cta={<CTA disabled={!isValid} onClick={submit}>See my credit report</CTA>}>
+        <form onSubmit={(e) => { e.preventDefault(); submit() }}>
+          <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--color-neutral-800)', letterSpacing: '-.02em' }}>Your number checks out.</h1>
+          <p style={{ fontSize: 15, color: 'var(--color-neutral-700)', lineHeight: 1.5, marginTop: 12 }}>Confirm your birthday and we'll pull up your file.</p>
+          <div style={{ position: 'relative', marginTop: 22 }}>
+            <label htmlFor="v2m-birthday" style={{ position: 'absolute', left: 15, pointerEvents: 'none', whiteSpace: 'nowrap', top: float ? 9 : '50%', transform: float ? 'none' : 'translateY(-50%)', fontSize: float ? 11 : 15, fontWeight: float ? 700 : 400, color: labelColor, transition: 'top .15s var(--ease-default), font-size .15s var(--ease-default), color .15s' }}>Birthday</label>
+            <input id="v2m-birthday" value={v} onChange={(e) => setV(formatUSDate(e.target.value))} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} inputMode="numeric" autoComplete="bday" maxLength={10} placeholder={float ? 'MM/DD/YYYY' : ''} aria-invalid={hasError} aria-describedby={hasError ? 'v2m-birthday-error' : undefined}
+              style={{ width: '100%', height: 58, border: `1.5px solid ${borderColor}`, borderRadius: 10, padding: float ? '22px 15px 0' : '0 15px', fontSize: 15, fontFamily: 'inherit', color: 'var(--color-neutral-800)', outline: 'none', transition: 'border-color .15s' }} />
+          </div>
+          {hasError && (
+            <p id="v2m-birthday-error" role="alert" style={{ fontSize: 13, color: 'var(--color-error-500)', marginTop: 8, lineHeight: 1.45, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.4"/><path d="M7 4.2v3.4M7 9.4v.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
+              Invalid birthday.
+            </p>
+          )}
+          <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 700, color: 'var(--color-neutral-800)', marginTop: 20 }}>Already have an account? <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Sign in</a></div>
+          <p style={{ fontSize: 12.5, color: 'var(--color-neutral-500)', lineHeight: 1.5, textAlign: 'center', marginTop: 18 }}>By continuing you agree to our <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Terms of Use</a> and <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Privacy Policy</a>. Standard message rates may apply.</p>
+          <button type="submit" tabIndex="-1" aria-label="Submit form" style={{ position: "absolute", left: "-9999px", opacity: 0, width: 1, height: 1 }} />
+        </form>
       </BottomSheet>
     </div>
   )
@@ -278,22 +351,22 @@ function MPasskey({ onNext }) {
         <div className="intro-rise"><MLogo size={26} /></div>
         <div className="intro-rise" style={{ textAlign: 'center', marginTop: 16 }}>
           <span style={{ display: 'inline-block', background: PINK, color: '#fff', fontSize: 10.5, fontWeight: 800, letterSpacing: '.08em', padding: '4px 12px', borderRadius: 9999 }}>FREE FOREVER</span>
-          <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--color-neutral-800)', lineHeight: 1.2, marginTop: 8 }}>Know your real FICO Score the one lenders actually use</h2>
+          <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--color-neutral-800)', lineHeight: 1.2, marginTop: 8 }}>The FICO Score lenders actually pull.</h2>
         </div>
         <div className="intro-rise" style={{ animationDelay: '.12s', marginTop: 10 }}><MGauge score={724} /></div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 10 }}>
-          <FeatureRow tile="#FAE9F2" icon={<Ico.trend />} title="Daily score updates" desc="See changes the moment they happen , no surprises" delay={0.2} />
-          <FeatureRow tile="#EBF1FA" icon={<Ico.report />} title="Free Experian credit report" desc="Full report, dispute inaccuracies for free anytime" delay={0.26} />
+          <FeatureRow tile="#FAE9F2" icon={<Ico.trend />} title="Daily score updates" desc="See a shift the same day it happens." delay={0.2} />
+          <FeatureRow tile="#EBF1FA" icon={<Ico.report />} title="Free Experian credit report" desc="Full report. Disputing an error costs nothing." delay={0.26} />
         </div>
         <div className="intro-rise" style={{ animationDelay: '.32s', marginTop: 8 }}><Dots active={2} /></div>
       </div>
-      <BottomSheet cta={<CTA onClick={onNext}>Add Passkey</CTA>}>
-        <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--color-neutral-800)', letterSpacing: '-.02em' }}>Setup Passkey</h1>
-        <p style={{ fontSize: 15, color: 'var(--color-neutral-700)', marginTop: 6 }}>Passkeys make it easy to login.</p>
+      <BottomSheet cta={<CTA onClick={onNext}>Set up passkey</CTA>}>
+        <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--color-neutral-800)', letterSpacing: '-.02em' }}>Set up your passkey.</h1>
+        <p style={{ fontSize: 15, color: 'var(--color-neutral-700)', marginTop: 6 }}>Sign in without a password. Your device handles the rest.</p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}>
-          <PasskeyRow icon={<Ico.faster />} title="Login Faster" desc="Unlike passwords, passkeys don't need to be remembered." delay={0.1} />
-          <PasskeyRow icon={<Ico.shieldCheck />} title="Enhanced Security" desc="Passkeys provide the strongest level of protection against phishing." delay={0.16} />
-          <PasskeyRow icon={<Ico.devices />} title="Multi-Device Support" desc="Passkeys can be accessed across different devices seamlessly." delay={0.22} />
+          <PasskeyRow icon={<Ico.faster />} title="Faster sign-in" desc="Nothing to remember. Your device does the work." delay={0.1} />
+          <PasskeyRow icon={<Ico.shieldCheck />} title="Phishing-resistant" desc="A passkey only works on the site it was made for." delay={0.16} />
+          <PasskeyRow icon={<Ico.devices />} title="Works across your devices" desc="Your passkey syncs to the devices you already use." delay={0.22} />
         </div>
         <div style={{ textAlign: 'center', fontSize: 13.5, fontWeight: 700, color: 'var(--color-neutral-800)', marginTop: 12 }}>Don&#39;t want to use a passkey? <a onClick={onNext} style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Skip for now</a></div>
       </BottomSheet>
@@ -307,6 +380,14 @@ function FoundDrawer({ onDone }) {
   const [closing, setClosing] = useState(false)
   const [dragY, setDragY] = useState(0)
   const [dragging, setDragging] = useState(false)
+  const [savedPhone] = useState(() => {
+    if (typeof window === 'undefined') return ''
+    return localStorage.getItem('exp_reg_phone') || ''
+  })
+  const [savedDob] = useState(() => {
+    if (typeof window === 'undefined') return '08/23/1983'
+    return localStorage.getItem('exp_reg_birthday') || '08/23/1983'
+  })
   const startY = useRef(0)
   useEffect(() => { const t = setTimeout(() => setRisen(true), 240); return () => clearTimeout(t) }, [])
   const down = (e) => { setDragging(true); startY.current = e.clientY; e.currentTarget.setPointerCapture?.(e.pointerId) }
@@ -325,7 +406,7 @@ function FoundDrawer({ onDone }) {
         <div style={{ fontSize: 16, fontWeight: 800, color: PINK, margin: '22px 0 14px' }}>About you</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{ display: 'flex', gap: 12 }}><FField label="First Name" value="Robert" half /><FField label="Last Name" value="Ross" half /></div>
-          <div style={{ display: 'flex', gap: 12 }}><FField label="Date of birth" value="08/23/1983" half /><FField label="Phone Number" value="" half /></div>
+          <div style={{ display: 'flex', gap: 12 }}><FField label="Date of birth" value={savedDob} half /><FField label="Phone Number" value={savedPhone} half /></div>
           <FField label="Street address" value="732 Capouse Ave" />
           <div style={{ display: 'flex', gap: 12 }}><FField label="Apt,unit,etc" value="" half /><FField label="Zip Code" value="18503" half /></div>
           <div style={{ display: 'flex', gap: 12 }}><FField label="City" value="Scranton" half /><FField label="State" value="UT" half /></div>

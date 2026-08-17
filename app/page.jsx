@@ -2,15 +2,18 @@
 
 /* ──────────────────────────────────────────────────────────────
    Registration Re-imagined — test cover sheet
-   Entry point for the usability test. Lets the participant choose
-   the Desktop or Mobile version of the flow.
+   Entry point for the usability test. Participant picks a
+   version (V1 / V2), then Desktop or Mobile. V1 is the control;
+   V2 is the editable copy.
    ────────────────────────────────────────────────────────────── */
+
+import { useState } from 'react'
 
 const go = (href) => window.location.assign(href)
 
 function MonitorIcon() {
   return (
-    <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
+    <svg aria-hidden="true" width="34" height="34" viewBox="0 0 40 40" fill="none">
       <rect x="5" y="7" width="30" height="20" rx="2.5" stroke="currentColor" strokeWidth="2.4" />
       <path d="M14 33h12M20 27v6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
     </svg>
@@ -19,7 +22,7 @@ function MonitorIcon() {
 
 function PhoneIcon() {
   return (
-    <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
+    <svg aria-hidden="true" width="34" height="34" viewBox="0 0 40 40" fill="none">
       <rect x="12" y="4" width="16" height="32" rx="3.5" stroke="currentColor" strokeWidth="2.4" />
       <path d="M17.5 8h5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
       <circle cx="20" cy="31" r="1.5" fill="currentColor" />
@@ -30,7 +33,7 @@ function PhoneIcon() {
 const OPTIONS = [
   {
     key: 'desktop',
-    href: '/register?step=phone',
+    hrefs: { v1: '/desktop', v2: '/v2/desktop' },
     Icon: MonitorIcon,
     label: 'Desktop',
     desc: 'Walk through the re-imagined registration on a full desktop screen.',
@@ -39,7 +42,7 @@ const OPTIONS = [
   },
   {
     key: 'mobile',
-    href: '/mobile',
+    hrefs: { v1: '/mobile-landing', v2: '/v2/mobile-landing' },
     Icon: PhoneIcon,
     label: 'Mobile',
     desc: 'Experience the same flow in a mobile-first layout.',
@@ -48,12 +51,66 @@ const OPTIONS = [
   },
 ]
 
-function OptionCard({ opt }) {
+function VersionToggle({ version, setVersion }) {
+  const options = [
+    { key: 'v1', label: 'V1', sub: 'Control' },
+    { key: 'v2', label: 'V2', sub: 'Iteration' },
+  ]
+  return (
+    <div
+      role="tablist"
+      aria-label="Prototype version"
+      style={{
+        display: 'inline-flex',
+        padding: 4,
+        gap: 4,
+        background: 'var(--color-neutral-100)',
+        borderRadius: 999,
+        margin: '0 auto 26px',
+      }}
+    >
+      {options.map((o) => {
+        const on = version === o.key
+        return (
+          <button
+            key={o.key}
+            role="tab"
+            aria-selected={on}
+            onClick={() => setVersion(o.key)}
+            style={{
+              appearance: 'none',
+              fontFamily: 'inherit',
+              cursor: 'pointer',
+              border: 'none',
+              padding: '9px 20px',
+              borderRadius: 999,
+              background: on ? '#fff' : 'transparent',
+              color: on ? 'var(--color-neutral-800)' : 'var(--color-neutral-600)',
+              boxShadow: on ? '0 2px 6px rgba(13,13,31,.10)' : 'none',
+              display: 'inline-flex',
+              alignItems: 'baseline',
+              gap: 8,
+              transition: 'background .15s, color .15s, box-shadow .15s',
+            }}
+          >
+            <span style={{ fontSize: 14, fontWeight: 800, letterSpacing: '.02em' }}>{o.label}</span>
+            <span style={{ fontSize: 11, fontWeight: 600, color: on ? 'var(--color-neutral-500)' : 'var(--color-neutral-500)' }}>
+              {o.sub}
+            </span>
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+function OptionCard({ opt, version }) {
   const { Icon } = opt
+  const href = opt.hrefs[version]
   return (
     <button
       className="mini-card"
-      onClick={() => go(opt.href)}
+      onClick={() => go(href)}
       style={{
         appearance: 'none',
         fontFamily: 'inherit',
@@ -67,8 +124,25 @@ function OptionCard({ opt }) {
         flexDirection: 'column',
         alignItems: 'center',
         gap: 14,
+        position: 'relative',
       }}
     >
+      <span
+        style={{
+          position: 'absolute',
+          top: 12,
+          right: 14,
+          fontSize: 10,
+          fontWeight: 800,
+          letterSpacing: '.08em',
+          color: opt.tint,
+          background: opt.tintBg,
+          padding: '3px 8px',
+          borderRadius: 999,
+        }}
+      >
+        {version.toUpperCase()}
+      </span>
       <span
         style={{
           width: 64,
@@ -100,7 +174,7 @@ function OptionCard({ opt }) {
         }}
       >
         Start
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path d="M5 3l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </span>
@@ -109,8 +183,10 @@ function OptionCard({ opt }) {
 }
 
 export default function CoverPage() {
+  const [version, setVersion] = useState('v1')
   return (
     <main
+      id="main-content"
       style={{
         minHeight: '100vh',
         background: 'var(--gradient-hero)',
@@ -172,15 +248,17 @@ export default function CoverPage() {
               lineHeight: 1.6,
               color: 'var(--color-neutral-600)',
               maxWidth: 440,
-              margin: '0 auto 34px',
+              margin: '0 auto 24px',
             }}
           >
-            Choose how you want to experience the prototype. Each path starts at the first screen of the flow.
+            Choose a version, then the surface you want to experience. Each path starts at the landing page.
           </p>
+
+          <VersionToggle version={version} setVersion={setVersion} />
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 18 }}>
             {OPTIONS.map((opt) => (
-              <OptionCard key={opt.key} opt={opt} />
+              <OptionCard key={opt.key} opt={opt} version={version} />
             ))}
           </div>
 
