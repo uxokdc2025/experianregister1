@@ -2,12 +2,9 @@
 
 /* ──────────────────────────────────────────────────────────────
    Registration Re-imagined — test cover sheet
-   Entry point for the usability test. Participant picks a
-   version (V1 / V2), then Desktop or Mobile. V1 is the control;
-   V2 is the editable copy.
+   Entry point for the usability test. Participant picks Desktop
+   or Mobile; both route into the V2 flow.
    ────────────────────────────────────────────────────────────── */
-
-import { useState } from 'react'
 
 const go = (href) => window.location.assign(href)
 
@@ -51,59 +48,6 @@ const OPTIONS = [
   },
 ]
 
-function VersionToggle({ version, setVersion }) {
-  const options = [
-    { key: 'v1', label: 'V1', sub: 'Control' },
-    { key: 'v2', label: 'V2', sub: 'Iteration' },
-  ]
-  return (
-    <div
-      role="tablist"
-      aria-label="Prototype version"
-      style={{
-        display: 'inline-flex',
-        padding: 4,
-        gap: 4,
-        background: 'var(--color-neutral-100)',
-        borderRadius: 999,
-        margin: '0 auto 26px',
-      }}
-    >
-      {options.map((o) => {
-        const on = version === o.key
-        return (
-          <button
-            key={o.key}
-            role="tab"
-            aria-selected={on}
-            onClick={() => setVersion(o.key)}
-            style={{
-              appearance: 'none',
-              fontFamily: 'inherit',
-              cursor: 'pointer',
-              border: 'none',
-              padding: '9px 20px',
-              borderRadius: 999,
-              background: on ? '#fff' : 'transparent',
-              color: on ? 'var(--color-neutral-800)' : 'var(--color-neutral-600)',
-              boxShadow: on ? '0 2px 6px rgba(13,13,31,.10)' : 'none',
-              display: 'inline-flex',
-              alignItems: 'baseline',
-              gap: 8,
-              transition: 'background .15s, color .15s, box-shadow .15s',
-            }}
-          >
-            <span style={{ fontSize: 14, fontWeight: 800, letterSpacing: '.02em' }}>{o.label}</span>
-            <span style={{ fontSize: 11, fontWeight: 600, color: on ? 'var(--color-neutral-500)' : 'var(--color-neutral-500)' }}>
-              {o.sub}
-            </span>
-          </button>
-        )
-      })}
-    </div>
-  )
-}
-
 function OptionCard({ opt, version }) {
   const { Icon } = opt
   const href = opt.hrefs[version]
@@ -127,22 +71,6 @@ function OptionCard({ opt, version }) {
         position: 'relative',
       }}
     >
-      <span
-        style={{
-          position: 'absolute',
-          top: 12,
-          right: 14,
-          fontSize: 10,
-          fontWeight: 800,
-          letterSpacing: '.08em',
-          color: opt.tint,
-          background: opt.tintBg,
-          padding: '3px 8px',
-          borderRadius: 999,
-        }}
-      >
-        {version.toUpperCase()}
-      </span>
       <span
         style={{
           width: 64,
@@ -183,7 +111,7 @@ function OptionCard({ opt, version }) {
 }
 
 export default function CoverPage() {
-  const [version, setVersion] = useState('v1')
+  const version = 'v2'
   return (
     <main
       id="main-content"
@@ -251,10 +179,8 @@ export default function CoverPage() {
               margin: '0 auto 24px',
             }}
           >
-            Choose a version, then the surface you want to experience. Each path starts at the landing page.
+            Choose the experience type below.
           </p>
-
-          <VersionToggle version={version} setVersion={setVersion} />
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 18 }}>
             {OPTIONS.map((opt) => (

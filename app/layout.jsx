@@ -2,7 +2,7 @@ import './globals.css'
 
 const SITE_NAME = 'Experian Registration Prototype'
 const SITE_DESCRIPTION =
-  'A UX research prototype exploring a re-imagined Experian sign-up experience. Two design iterations run side-by-side for usability testing. Not affiliated with Experian; not a live product.'
+  'A UX research prototype exploring a re-imagined Experian sign-up experience. Two design iterations run side-by-side for usability testing.'
 const SITE_URL = 'https://experianregister1.vercel.app'
 
 export const metadata = {

@@ -1,6 +1,6 @@
 # Experian Registration Prototype
 
-> A UX research prototype exploring a re-imagined Experian sign-up experience. Two design iterations run side-by-side for usability testing. Not affiliated with Experian; not a live product.
+> A UX research prototype exploring a re-imagined Experian sign-up experience. Two design iterations run side-by-side for usability testing.
 
 ## Overview
 
