@@ -34,3 +34,4 @@ next-env.d.ts
 # next 16 auto-generated agent docs
 /AGENTS.md
 /CLAUDE.md
+.env*

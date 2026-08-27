@@ -1,4 +1,4 @@
-const BASE = 'https://experianregister1.vercel.app'
+const BASE = 'https://usertestingdemo.vercel.app'
 
 export default function sitemap() {
   const routes = [

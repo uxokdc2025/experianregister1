@@ -3,7 +3,7 @@ import './globals.css'
 const SITE_NAME = 'Experian Registration Prototype'
 const SITE_DESCRIPTION =
   'A UX research prototype exploring a re-imagined Experian sign-up experience. Two design iterations run side-by-side for usability testing.'
-const SITE_URL = 'https://experianregister1.vercel.app'
+const SITE_URL = 'https://usertestingdemo.vercel.app'
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
@@ -38,27 +38,20 @@ export const metadata = {
     title: `${SITE_NAME} — Usability Test`,
     description: SITE_DESCRIPTION,
     locale: 'en_US',
-    images: [
-      {
-        url: '/uploads/Experian.png',
-        width: 1200,
-        height: 630,
-        alt: 'Experian Registration Prototype',
-      },
-    ],
   },
   twitter: {
-    card: 'summary_large_image',
+    card: 'summary',
     title: `${SITE_NAME} — Usability Test`,
     description: SITE_DESCRIPTION,
-    images: ['/uploads/Experian.png'],
   },
   icons: {
     icon: [
-      { url: '/uploads/Experian.svg', type: 'image/svg+xml' },
-      { url: '/uploads/Experian.png' },
+      {
+        url:
+          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23BA2F7D'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='16' font-weight='700' fill='white' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E",
+        type: 'image/svg+xml',
+      },
     ],
-    apple: '/uploads/Experian.png',
   },
   formatDetection: { telephone: false, address: false, email: false },
   category: 'design',
@@ -90,6 +83,25 @@ export default function RootLayout({ children }) {
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
+        <div
+          role="note"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 2147483647,
+            background: '#1E1E35',
+            color: '#fff',
+            font: '600 12px/1.35 system-ui, sans-serif',
+            textAlign: 'center',
+            padding: '6px 12px',
+            letterSpacing: '.01em',
+          }}
+        >
+          DEMO — UX research prototype for user testing only. Not affiliated with
+          or endorsed by Experian. No data is collected or stored.
+        </div>
         {children}
       </body>
     </html>
