@@ -86,10 +86,8 @@ export default function RootLayout({ children }) {
         <div
           role="note"
           style={{
-            position: 'fixed',
+            position: 'sticky',
             top: 0,
-            left: 0,
-            right: 0,
             zIndex: 2147483647,
             background: '#1E1E35',
             color: '#fff',

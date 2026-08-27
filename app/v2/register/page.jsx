@@ -213,7 +213,7 @@ function BenefitPanel({ slide, setSlide }) {
     return () => clearTimeout(t)
   }, [slide])
   return (
-    <div style={{ background: '#F4F4FB', borderRadius: 28, padding: '56px 48px', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+    <div className="reg-benefit-panel" style={{ background: '#F4F4FB', borderRadius: 28, padding: '56px 48px', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'hidden' }}>
         <div style={{ opacity: vis ? 1 : 0, transform: vis ? 'none' : 'translateY(18px) scale(.99)', transition: 'opacity .28s var(--ease-default), transform .28s var(--ease-default)', willChange: 'opacity, transform' }}>
           {slides[shown]}
@@ -419,9 +419,9 @@ function DashNav() {
   const items = ['Dashboard', 'My Score', 'Credit Report', 'Protect', 'Offers']
   return (
     <header style={{ background: '#fff', borderBottom: '1px solid var(--color-neutral-100)', position: 'sticky', top: 0, zIndex: 50 }}>
-      <div style={{ maxWidth: 1320, margin: '0 auto', padding: '0 40px', height: 80, display: 'flex', alignItems: 'center' }}>
+      <div className="dash-nav-inner" style={{ maxWidth: 1320, margin: '0 auto', padding: '0 40px', height: 80, display: 'flex', alignItems: 'center' }}>
         <RegLogo size={24} />
-        <nav style={{ display: 'flex', gap: 38, flex: 1, justifyContent: 'center' }}>
+        <nav className="dash-nav-links" style={{ display: 'flex', gap: 38, flex: 1, justifyContent: 'center' }}>
           {items.map((n, i) => (
             <div key={n} style={{ position: 'relative', fontSize: 16, fontWeight: i === 0 ? 700 : 500, color: i === 0 ? 'var(--color-neutral-900)' : 'var(--color-neutral-600)', cursor: 'pointer', paddingBottom: 4 }}>
               {n}
@@ -615,10 +615,10 @@ function Dashboard({ unlocked, onGetStarted }) {
   return (
     <div style={{ background: '#fff', minHeight: '100%' }}>
       <DashNav />
-      <div className={unlocked ? undefined : 'dash-locked'} onClickCapture={unlocked ? undefined : (e) => { if (e.target.closest('[data-lock]')) onGetStarted() }} style={{ maxWidth: 1320, margin: '0 auto', padding: '44px 40px 80px' }}>
+      <div className={`dash-content${unlocked ? '' : ' dash-locked'}`} onClickCapture={unlocked ? undefined : (e) => { if (e.target.closest('[data-lock]')) onGetStarted() }} style={{ maxWidth: 1320, margin: '0 auto', padding: '44px 40px 80px' }}>
         <h1 style={{ fontSize: 36, fontWeight: 800, color: 'var(--color-neutral-900)', letterSpacing: '-.01em', filter: unlocked ? 'none' : 'blur(9px)', userSelect: unlocked ? 'auto' : 'none' }} aria-hidden={!unlocked}>Hi, Good Morning{unlocked ? ', David' : ''}!</h1>
         <p style={{ fontSize: 16, color: 'var(--color-neutral-500)', marginTop: 6, filter: unlocked ? 'none' : 'blur(9px)', userSelect: unlocked ? 'auto' : 'none' }} aria-hidden={!unlocked}>Take a look at the big picture of your credit.</p>
-        <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr 1fr', gap: 28, marginTop: 34, alignItems: 'start' }}>
+        <div className="dash-grid" style={{ display: 'grid', gridTemplateColumns: '300px 1fr 1fr', gap: 28, marginTop: 34, alignItems: 'start' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <SetupProgress unlocked={unlocked} />
             <Benefits unlocked={unlocked} />
@@ -726,19 +726,19 @@ function FoundBody({ onClose, onVerify }) {
         <p style={{ fontSize: 14.5, color: 'var(--color-neutral-500)', marginTop: 8 }}>Make sure everything looks correct and edit anything that needs updating.</p>
         <div style={{ fontSize: 16, fontWeight: 800, color: PINK, marginTop: 26, marginBottom: 18 }}>About you</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-          <div className="intro-rise" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
+          <div className="intro-rise stack-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
             <FloatField label="First name" value="Robert" />
             <FloatField label="Last name" value="Ross" />
           </div>
-          <div className="intro-rise" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
+          <div className="intro-rise stack-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
             <FloatField label="Date of birth" hint="MM/DD/YYYY" value={savedDob} />
             <FloatField label="Phone number" value={savedPhone} />
           </div>
-          <div className="intro-rise" style={{ display: 'grid', gridTemplateColumns: '2.2fr 1fr', gap: 18 }}>
+          <div className="intro-rise stack-mobile" style={{ display: 'grid', gridTemplateColumns: '2.2fr 1fr', gap: 18 }}>
             <FloatField label="Street address" value="732 Capouse Ave" />
             <FloatField label="Apt, unit, etc." />
           </div>
-          <div className="intro-rise" style={{ display: 'grid', gridTemplateColumns: '0.85fr 1.3fr 0.9fr', gap: 18 }}>
+          <div className="intro-rise stack-mobile" style={{ display: 'grid', gridTemplateColumns: '0.85fr 1.3fr 0.9fr', gap: 18 }}>
             <FloatField label="ZIP code" value="18503" />
             <FloatField label="City" value="Scranton" />
             <FloatField label="State" value="UT" select />
@@ -818,9 +818,9 @@ function RegisterApp() {
   if (isAuth) {
     return (
       <main id="main-content" style={{ minHeight: '100vh', padding: 24, background: '#fff' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.32fr 1fr', gap: 0, maxWidth: 1340, margin: '0 auto', minHeight: 'calc(100vh - 48px)' }}>
+        <div className="reg-auth-grid" style={{ display: 'grid', gridTemplateColumns: '1.32fr 1fr', gap: 0, maxWidth: 1340, margin: '0 auto', minHeight: 'calc(100vh - 48px)' }}>
           <BenefitPanel slide={slide} setSlide={setSlide} />
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 56px' }}>
+          <div className="reg-form-col" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 56px' }}>
             {step === 'phone' && <AuthPhone onNext={() => setStep('birthday')} />}
             {step === 'birthday' && <AuthBirthday onNext={() => setStep('passkey')} />}
             {step === 'passkey' && <AuthPasskey onNext={() => setStep('dash-locked')} />}
