@@ -257,8 +257,8 @@ function MPhone({ onNext }) {
       </div>
       <BottomSheet cta={
         <>
-          <p style={{ fontSize: 14, lineHeight: 1.45, color: 'var(--color-neutral-600)', margin: '0 0 12px' }}>
-            By selecting &quot;Get started&quot;, you authorize your wireless carrier to use or disclose information about your account and your wireless device, if available, to Experian or its service provider, solely to help them identify you or your wireless device and to prevent fraud. You consent to a one-time verification text or phone call from Experian to the number provided. Message and data rates may apply.
+          <p style={{ fontSize: 13, lineHeight: 1.45, color: 'var(--color-neutral-600)', margin: '0 0 12px' }}>
+            By selecting &quot;Get started&quot;, you authorize your wireless carrier to use or disclose information about your account and your wireless device, if available, to Experian or its service provider, solely to help them identify you or your wireless device and to prevent fraud.
           </p>
           <CTA disabled={!isValid} onClick={submit}>Get started</CTA>
         </>
