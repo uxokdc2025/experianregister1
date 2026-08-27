@@ -14,7 +14,7 @@ const BLUE_DEEP = 'var(--color-blue-800)'
 const INK = '#0D0D1F'
 const MW = 393
 const MH = 852
-const FLOW_HREF = '/v2/mobile'
+const FLOW_HREF = '/start/apply'
 const go = (href) => window.location.assign(href)
 
 function MobileFrame({ children }) {
@@ -186,11 +186,10 @@ function StickyCta() {
   )
 }
 
-export default function MobileLandingPage() {
+function LandingBody() {
   const [active, setActive] = useState(0)
   return (
-    <MobileFrame>
-      <StatusBar />
+    <>
       <TopBar />
 
       <main id="main-content" style={{ flex: 1, overflowY: 'auto', paddingBottom: 40 }}>
@@ -234,6 +233,36 @@ export default function MobileLandingPage() {
       </main>
 
       <StickyCta />
+    </>
+  )
+}
+
+/* Full-viewport shell — fills a real device (no fake phone frame). */
+function ResponsiveLandingShell({ children }) {
+  return (
+    <div style={{ minHeight: '100dvh', background: 'var(--color-neutral-100)', display: 'flex', justifyContent: 'center' }}>
+      <div style={{ position: 'relative', width: '100%', maxWidth: 520, height: '100dvh', background: '#fff', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        {children}
+      </div>
+    </div>
+  )
+}
+
+/* Responsive mobile landing (used by the adaptive /start route). */
+export function MobileLandingApp() {
+  return (
+    <ResponsiveLandingShell>
+      <LandingBody />
+    </ResponsiveLandingShell>
+  )
+}
+
+/* Standalone framed preview at /v2/mobile-landing. */
+export default function MobileLandingPage() {
+  return (
+    <MobileFrame>
+      <StatusBar />
+      <LandingBody />
     </MobileFrame>
   )
 }

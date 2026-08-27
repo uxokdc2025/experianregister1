@@ -101,7 +101,6 @@ export default function RootLayout({ children }) {
         >
           <span style={{ font: '600 11px/1.3 system-ui, sans-serif', letterSpacing: '.01em' }}>
             Demo prototype — user testing only
-            <span className="demo-extra"> · not affiliated with Experian</span>
           </span>
         </div>
         {children}

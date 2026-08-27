@@ -1,19 +1,18 @@
 'use client'
 
 /* ──────────────────────────────────────────────────────────────
-   /start — the single adaptive entry: the marketing HOMEPAGE.
-   Below the phone breakpoint we render the crafted mobile landing;
-   above it, the desktop landing. Both CTAs lead into /start/apply
-   (the registration wizard), which adapts the same way.
+   /start/apply — the registration wizard, adaptive by width.
+   Reached from the /start homepage CTAs. Below the phone breakpoint
+   we render the crafted mobile flow; above it, the desktop flow.
    ────────────────────────────────────────────────────────────── */
 
 import { useState, useEffect } from 'react'
-import { MobileLandingApp } from '../v2/mobile-landing/page'
-import { DesktopLandingApp } from '../v2/desktop/page'
+import { MobileApp } from '../../v2/mobile/page'
+import DesktopFlow from '../../v2/register/page'
 
 const MOBILE_MAX = 767 // ≤ this width → mobile-crafted screens
 
-export default function StartPage() {
+export default function ApplyPage() {
   const [mode, setMode] = useState(null)
 
   useEffect(() => {
@@ -25,5 +24,5 @@ export default function StartPage() {
   }, [])
 
   if (mode === null) return <div style={{ minHeight: '100dvh', background: '#fff' }} />
-  return mode === 'mobile' ? <MobileLandingApp /> : <DesktopLandingApp />
+  return mode === 'mobile' ? <MobileApp /> : <DesktopFlow />
 }

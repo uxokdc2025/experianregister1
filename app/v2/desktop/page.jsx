@@ -73,8 +73,8 @@ function Nav() {
           ))}
         </nav>
         <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
-          <Button variant="secondary" size="md" style={{ borderRadius: 6 }} onClick={() => window.location.assign('/v2/register?step=phone')}>Sign in</Button>
-          <Button variant="primary" size="md" style={{ background: 'var(--color-pink-400)', border: 'none', borderRadius: 6 }} onClick={() => window.location.assign('/v2/register?step=phone')}>Sign up</Button>
+          <Button variant="secondary" size="md" style={{ borderRadius: 6 }} onClick={() => window.location.assign('/start/apply')}>Sign in</Button>
+          <Button variant="primary" size="md" style={{ background: 'var(--color-pink-400)', border: 'none', borderRadius: 6 }} onClick={() => window.location.assign('/start/apply')}>Sign up</Button>
           <button aria-label="Search" style={{ background: 'none', border: 'none', color: 'var(--color-neutral-700)', cursor: 'pointer', display: 'flex' }}><Ico.search /></button>
         </div>
       </div>
@@ -178,7 +178,7 @@ function Hero() {
           <div>
             <h2 style={{ fontSize: 28, fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: 'var(--color-neutral-800)', marginBottom: 14 }}>Get your free credit report and FICO® Score<sup style={{ fontSize: 16 }}>*</sup></h2>
             <p style={{ fontSize: 15.5, lineHeight: 1.6, color: 'var(--color-neutral-600)', maxWidth: 420, marginBottom: 26 }}>Then raise your credit scores instantly using bills like your cell phone, utilities, streaming services and eligible rent payments.<sup>ø</sup></p>
-            <Button variant="primary" size="lg" onClick={() => window.location.assign('/v2/register?step=phone')} style={{ background: 'var(--color-pink-400)', border: 'none', borderRadius: 6 }}>Let&#39;s get started</Button>
+            <Button variant="primary" size="lg" onClick={() => window.location.assign('/start/apply')} style={{ background: 'var(--color-pink-400)', border: 'none', borderRadius: 6 }}>Let&#39;s get started</Button>
             <hr style={{ margin: '28px 0 18px', border: 'none', borderTop: '1px solid var(--color-neutral-100)' }} />
             <p style={{ fontSize: 11.5, lineHeight: 1.6, color: 'var(--color-neutral-500)', marginBottom: 12 }}>
               <sup>*</sup>Credit score calculated based on FICO® Score 8 model. Your lender or insurer may use a different FICO® Score than FICO® Score 8, or another type of credit score altogether. <a className="lnk" style={{ color: 'var(--color-blue-600)', fontWeight: 600 }}>Learn more</a>.
@@ -371,13 +371,13 @@ function StickyBar() {
       <div className="wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 20, height: 72 }}>
         <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-neutral-800)' }}>Get your free credit report and FICO® Score</span>
         <Button variant="secondary" size="md" style={{ borderRadius: 6 }}>Sign in</Button>
-        <Button variant="primary" size="md" style={{ background: 'var(--color-pink-400)', border: 'none', borderRadius: 6 }} onClick={() => window.location.assign('/v2/register?step=phone')}>Sign up for free</Button>
+        <Button variant="primary" size="md" style={{ background: 'var(--color-pink-400)', border: 'none', borderRadius: 6 }} onClick={() => window.location.assign('/start/apply')}>Sign up for free</Button>
       </div>
     </div>
   )
 }
 
-export default function HomePage() {
+function HomePage() {
   return (
     <main id="main-content" style={{ paddingBottom: 72 }}>
       <UtilityBar />
@@ -391,3 +391,7 @@ export default function HomePage() {
     </main>
   )
 }
+
+/* Desktop landing, used by the adaptive /start route and standalone /v2/desktop. */
+export { HomePage as DesktopLandingApp }
+export default HomePage
