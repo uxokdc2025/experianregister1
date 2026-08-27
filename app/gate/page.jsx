@@ -1,5 +1,14 @@
 /* Neutral password page — no Experian branding, safe for crawlers to see. */
 
+export const metadata = {
+  title: 'Demo access',
+  description: 'Password-protected prototype for user testing.',
+  applicationName: 'Demo access',
+  openGraph: { title: 'Demo access', description: 'Password-protected prototype for user testing.', images: [] },
+  twitter: { title: 'Demo access', description: 'Password-protected prototype for user testing.' },
+  robots: { index: false, follow: false },
+}
+
 export default async function GatePage({ searchParams }) {
   const sp = (await searchParams) || {}
   const next = typeof sp.next === 'string' && sp.next.startsWith('/') ? sp.next : '/start'
