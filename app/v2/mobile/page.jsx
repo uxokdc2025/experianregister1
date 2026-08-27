@@ -428,13 +428,14 @@ function DashCard({ children, pad = 20 }) {
   return <div style={{ border: '1px solid var(--color-neutral-200)', borderRadius: 14, padding: pad }}>{children}</div>
 }
 
-function MDash({ unlocked = true }) {
+function MDash({ unlocked = true, showStatusBar = true }) {
   const blur = unlocked ? 'none' : 'blur(8px)'
   const benefits = ['Credit monitoring', 'Credit report', 'Experian Boost®', 'Exact FICO® Score', 'Score history', 'Dark web scan']
   const progress = [['Account created', 'done'], ['Phone verified', 'done'], ['Confirm identity', unlocked ? 'done' : 'active'], ['Score & report revealed', unlocked ? 'done' : 'todo']]
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', overflowY: 'auto', background: '#fff' }}>
-      <StatusBar />
+      {showStatusBar && <StatusBar />}
+      {!showStatusBar && <div style={{ height: 14 }} />}
       <div style={{ padding: '0 20px 40px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 8 }}><MLogo size={26} /></div>
         <h1 className="intro-rise" style={{ fontSize: 26, fontWeight: 800, color: 'var(--color-neutral-900)', marginTop: 8 }}>{unlocked ? 'Hi, David !' : 'Hi, Good Morning !'}</h1>
@@ -515,30 +516,59 @@ function MDash({ unlocked = true }) {
 }
 
 /* ─────────────── Flow ─────────────── */
-export default function MobilePage() {
+function MobileSteps({ showStatusBar = true }) {
   const [step, setStep] = useState('phone')
   return (
-    <MobileFrame>
+    <>
       {step === 'phone' && <MPhone onNext={() => setStep('birthday')} />}
       {step === 'birthday' && <MBirthday onNext={() => setStep('passkey')} />}
       {step === 'passkey' && <MPasskey onNext={() => setStep('found')} />}
       {step === 'found' && (
         <>
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}><MDash unlocked={false} /></div>
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}><MDash unlocked={false} showStatusBar={showStatusBar} /></div>
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(13,13,31,.30)', zIndex: 20 }} />
           <FoundDrawer onDone={() => setStep('celebrate')} />
         </>
       )}
       {step === 'celebrate' && (
         <>
-          <div style={{ position: 'absolute', inset: 0 }}><MDash unlocked /></div>
+          <div style={{ position: 'absolute', inset: 0 }}><MDash unlocked showStatusBar={showStatusBar} /></div>
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(244,244,251,.88)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 30 }}>
             <SuccessContent onDone={() => setStep('dash')} />
           </div>
           <Confetti />
         </>
       )}
-      {step === 'dash' && <MDash unlocked />}
+      {step === 'dash' && <MDash unlocked showStatusBar={showStatusBar} />}
+    </>
+  )
+}
+
+/* Full-viewport shell — fills a real device (no fake phone frame). */
+function MobileShell({ children }) {
+  return (
+    <div style={{ minHeight: '100dvh', background: 'var(--color-neutral-100)', display: 'flex', justifyContent: 'center' }}>
+      <main id="main-content" style={{ position: 'relative', width: '100%', maxWidth: 520, height: '100dvh', background: '#fff', overflow: 'hidden' }}>
+        {children}
+      </main>
+    </div>
+  )
+}
+
+/* Responsive mobile experience (used by the adaptive /start route). */
+export function MobileApp() {
+  return (
+    <MobileShell>
+      <MobileSteps showStatusBar={false} />
+    </MobileShell>
+  )
+}
+
+/* Standalone framed preview at /v2/mobile. */
+export default function MobilePage() {
+  return (
+    <MobileFrame>
+      <MobileSteps />
     </MobileFrame>
   )
 }

@@ -315,6 +315,13 @@ a:focus-visible,
    Collapses the desktop-first register + dashboard layouts to a fluid
    mobile layout. Uses !important to override the component inline styles. */
 
+/* Demo label: drop the affiliation clause on phones so it stays one line */
+@media (max-width: 600px) {
+  .demo-extra {
+    display: none;
+  }
+}
+
 /* Auth split → single column; benefits panel hidden on narrow screens */
 @media (max-width: 900px) {
   .reg-auth-grid {

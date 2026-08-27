@@ -91,14 +91,18 @@ export default function RootLayout({ children }) {
             zIndex: 2147483647,
             background: '#1E1E35',
             color: '#fff',
-            font: '600 12px/1.35 system-ui, sans-serif',
-            textAlign: 'center',
-            padding: '6px 12px',
-            letterSpacing: '.01em',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            padding: '5px 14px',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
           }}
         >
-          DEMO — UX research prototype for user testing only. Not affiliated with
-          or endorsed by Experian. No data is collected or stored.
+          <span style={{ font: '600 11px/1.3 system-ui, sans-serif', letterSpacing: '.01em' }}>
+            Demo prototype — user testing only
+            <span className="demo-extra"> · not affiliated with Experian</span>
+          </span>
         </div>
         {children}
       </body>
