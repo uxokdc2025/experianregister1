@@ -318,14 +318,17 @@ a:focus-visible,
 /* Auth split → single column; benefits panel hidden on narrow screens */
 @media (max-width: 900px) {
   .reg-auth-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: minmax(0, 1fr) !important;
     max-width: 520px !important;
   }
   .reg-benefit-panel {
     display: none !important;
   }
   .dash-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .dash-grid > * {
+    min-width: 0 !important;
   }
   .dash-nav-links {
     display: none !important;
@@ -345,6 +348,6 @@ a:focus-visible,
     padding: 0 16px !important;
   }
   .stack-mobile {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: minmax(0, 1fr) !important;
   }
 }
