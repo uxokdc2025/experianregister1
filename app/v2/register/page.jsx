@@ -293,7 +293,7 @@ function AuthPhone({ onNext }) {
           />
         </div>
       </div>
-      <p style={{ fontSize: 13, color: 'var(--color-neutral-600)', lineHeight: 1.5, marginTop: 24 }}>By selecting &quot;Get started&quot;, you authorize your wireless carrier to use or disclose information about your account and your wireless device, if available, to Experian or its service provider, solely to help them identify you or your wireless device and to prevent fraud.</p>
+      <p style={{ fontSize: 12, color: 'var(--color-neutral-600)', lineHeight: 1.5, marginTop: 24 }}>By selecting &quot;Get started&quot;, you authorize your wireless carrier to use or disclose information about your account and your wireless device, if available, to Experian or its service provider, solely to help them identify you or your wireless device and to prevent fraud.</p>
       <div style={{ marginTop: 14 }}><SolidBtn disabled={!isValid} onClick={submit}>Get started</SolidBtn></div>
       <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 700, color: 'var(--color-neutral-800)', marginTop: 22 }}>Already have an account? <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Sign in</a></div>
       <button type="submit" tabIndex="-1" aria-label="Submit form" style={{ position: "absolute", left: "-9999px", opacity: 0, width: 1, height: 1 }} />
