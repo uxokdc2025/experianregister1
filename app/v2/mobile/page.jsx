@@ -255,7 +255,14 @@ function MPhone({ onNext }) {
         </div>
         <div className="intro-rise" style={{ animationDelay: '.4s', marginTop: 18 }}><Dots active={0} /></div>
       </div>
-      <BottomSheet cta={<CTA disabled={!isValid} onClick={submit}>Get started</CTA>}>
+      <BottomSheet cta={
+        <>
+          <p style={{ fontSize: 14, lineHeight: 1.45, color: 'var(--color-neutral-600)', margin: '0 0 12px' }}>
+            By selecting &quot;Get started&quot;, you authorize your wireless carrier to use or disclose information about your account and your wireless device, if available, to Experian or its service provider, solely to help them identify you or your wireless device and to prevent fraud. You consent to a one-time verification text or phone call from Experian to the number provided. Message and data rates may apply.
+          </p>
+          <CTA disabled={!isValid} onClick={submit}>Get started</CTA>
+        </>
+      }>
         <form onSubmit={(e) => { e.preventDefault(); submit() }}>
           <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--color-neutral-800)', letterSpacing: '-.02em' }}>See your free credit score.</h1>
           <p style={{ fontSize: 15, color: 'var(--color-neutral-700)', lineHeight: 1.5, marginTop: 12 }}>Join 100 million people who trust Experian to understand, protect, and improve their financial health.</p>
@@ -272,7 +279,6 @@ function MPhone({ onNext }) {
             </div>
           </div>
           <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 700, color: 'var(--color-neutral-800)', marginTop: 20 }}>Already have an account? <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Sign in</a></div>
-          <p style={{ fontSize: 12.5, color: 'var(--color-neutral-500)', lineHeight: 1.5, textAlign: 'center', marginTop: 18 }}>By continuing you agree to our <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Terms of Use</a> and <a style={{ color: 'var(--color-blue-400)', cursor: 'pointer' }}>Privacy Policy</a>. Standard message rates may apply.</p>
           <button type="submit" tabIndex="-1" aria-label="Submit form" style={{ position: "absolute", left: "-9999px", opacity: 0, width: 1, height: 1 }} />
         </form>
       </BottomSheet>
