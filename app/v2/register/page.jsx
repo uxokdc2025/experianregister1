@@ -429,7 +429,7 @@ function DashNav() {
             </div>
           ))}
         </nav>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 22, color: 'var(--color-neutral-700)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 22, marginLeft: 'auto', color: 'var(--color-neutral-700)' }}>
           <div style={{ position: 'relative' }}>
             <RIco.bell />
             <span style={{ position: 'absolute', top: -6, right: -7, background: PINK, color: '#fff', fontSize: 10, fontWeight: 700, width: 17, height: 17, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>5</span>
