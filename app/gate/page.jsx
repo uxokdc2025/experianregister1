@@ -1,7 +1,7 @@
 /* Neutral password page — no Experian branding, safe for crawlers to see. */
 
 export const metadata = {
-  title: 'Demo access',
+  title: { absolute: 'Demo access' },
   description: 'Password-protected prototype for user testing.',
   applicationName: 'Demo access',
   openGraph: { title: 'Demo access', description: 'Password-protected prototype for user testing.', images: [] },
