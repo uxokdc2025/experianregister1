@@ -25,7 +25,7 @@ import {
   startConditionalSignIn,
   startPasskeySignIn,
 } from '../lib/passkey'
-import { PERSONA, digitsOnly, formatPhone, logEvent, readState, writeState } from '../lib/state'
+import { PERSONA, digitsOnly, logEvent, readState, writeState } from '../lib/state'
 
 /* Visible, deliberately inert controls (out of scope for Study 2). */
 const noop = (e) => e.preventDefault()
@@ -42,7 +42,7 @@ function GoogleG() {
 }
 
 export default function SignInPage() {
-  const [login, setLogin] = useState(PERSONA.phone)
+  const [login, setLogin] = useState("")
   const [hasPasskey, setHasPasskey] = useState(false)
   // passkey sign-in CTA: idle → waiting (OS prompt open) → loading (spinner) → done (check)
   const [pkState, setPkState] = useState('idle')
@@ -60,7 +60,6 @@ export default function SignInPage() {
 
   useEffect(() => {
     const s = readState()
-    if (s.phone) setLogin(formatPhone(s.phone))
     setHasPasskey(Boolean(s.passkey))
     let alive = true
     /* Autofill: the browser offers a saved passkey from the input (autocomplete="username webauthn"). */
@@ -93,7 +92,11 @@ export default function SignInPage() {
 
   /* Only a 10-digit entry is kept as the phone the later screens mask;
      anything else (username / email) falls back to the persona's 4567. */
-  const remember = (flow) => writeState({ phone: digitsOnly(login).length === 10 ? login : PERSONA.phone, flow })
+  const remember = (flow) => {
+    const typed = digitsOnly(login).length === 10 ? login : ""
+    // field starts blank (David, Nov 16): sign-in falls back to the persona; create keeps its own field blank too
+    writeState({ phone: typed || (flow === "signin" ? PERSONA.phone : ""), flow })
+  }
 
   const onSignIn = () => {
     if (pkState === 'loading' || pkState === 'done') return
