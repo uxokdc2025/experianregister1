@@ -4,18 +4,21 @@
    D2 / M2 — Create a passkey (/v3/create-passkey)
    plus D3 / M3 — the "What is a passkey?" modal.
 
+   Layout and copy follow Figma Holder 7:11233 (desktop frame
+   7:11196): laptop + shield + fingerprint illustration, empty
+   "Enter phone number" float-label field, Continue, Learn More.
    Nothing is created here: the tester confirms their number,
    verifies by one-time code, and creation starts from the
    Verify click on /v3/code (so the user gesture survives).
    ────────────────────────────────────────────────────────────── */
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { PageShell } from '../_components/Chrome'
 import { Field } from '../_components/Form'
 import { Modal } from '../_components/Modal'
 import { PasskeyBadges } from '../_components/Art'
-import { ACCOUNT_HREF, SIGN_IN_HREF, VERIFY_HREF, go } from '../lib/routes'
-import { formatPhone, logEvent, readState, writeState } from '../lib/state'
+import { VERIFY_HREF, go } from '../lib/routes'
+import { formatPhone, logEvent, writeState } from '../lib/state'
 
 const STEPS = [
   {
@@ -96,13 +99,6 @@ function WhatIsAPasskey({ onClose }) {
 export default function CreatePasskeyPage() {
   const [phone, setPhone] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
-  const [signedIn, setSignedIn] = useState(false)
-
-  useEffect(() => {
-    const s = readState()
-    if (s.phone) setPhone(formatPhone(s.phone))
-    setSignedIn(Boolean(s.signedIn))
-  }, [])
 
   const onContinue = () => {
     writeState({ phone, flow: 'create' })
@@ -110,91 +106,66 @@ export default function CreatePasskeyPage() {
     go(`${VERIFY_HREF}?flow=create`)
   }
 
-  const note = (
-    <p className="v3-note" style={{ marginTop: 18 }}>
-      Only create a passkey on a device you don’t share.
-    </p>
-  )
-
   return (
     <PageShell>
       {/* the passkey offer floats in (V2's intro-rise motion), most visibly
           right after the sign-in spinner → check on /v3/code */}
       <div className="intro-rise">
-      <div className="v3-ctr-mobleft">
-        <div className="v3-art v3-art-mobleft">
-          <PasskeyBadges size={0.86} />
-        </div>
+        <div className="v3-createpk">
+          <div className="v3-createpk-graphic">
+            <img
+              src="/uploads/v3/create-passkey-illustration.svg"
+              alt=""
+              width={244}
+              height={152}
+            />
+          </div>
 
-        <h1 className="v3-h1" style={{ marginTop: 22 }}>
-          Create a passkey
-        </h1>
-        <p className="v3-sub" style={{ marginTop: 8 }}>
-          First, let’s confirm it’s you.
-        </p>
-        <p className="v3-body" style={{ marginTop: 16 }}>
-          A passkey lets you sign in to Experian with your face, fingerprint or device PIN — the same way you unlock your
-          phone or computer. No password to remember.
-        </p>
+          <div className="v3-createpk-title">
+            <h1>Create a passkey</h1>
+            <p>You’ll need to sign in to create a passkey</p>
+          </div>
 
-        {/* D2 puts the warning above the field; M2 puts it at the end */}
-        <div className="v3-desk">{note}</div>
-      </div>
+          <p className="v3-createpk-body">
+            Passkey is new way to easily access accounts online by using the security features built into your device like facial recognition, fingerprint or PIN
+          </p>
 
-      <div style={{ marginTop: 24 }}>
-        {/* one field, so Enter — and the phone keyboard's Go key — continues */}
-        <form onSubmit={(e) => { e.preventDefault(); onContinue() }}>
-          <Field
-            label="Mobile number on your Experian account"
-            name="phone"
-            type="tel"
-            inputMode="tel"
-            autoComplete="tel-national"
-            value={phone}
-            onChange={(v) => setPhone(formatPhone(v))}
-          />
-
-          <button type="submit" className="v3-btn v3-btn-primary" style={{ marginTop: 16 }}>
-            Continue
-          </button>
-        </form>
-
-        <div className="v3-ctr" style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <span>
-            <button
-              type="button"
-              className="v3-linkbtn"
-              onClick={() => {
-                logEvent('learn_more_opened')
-                setModalOpen(true)
+          <div className="v3-createpk-actions">
+            <form
+              className="v3-createpk-form"
+              onSubmit={(e) => {
+                e.preventDefault()
+                onContinue()
               }}
             >
-              Learn More
-            </button>
-          </span>
-          <span>
-            {signedIn ? (
+              <Field
+                label="Enter phone number"
+                name="phone"
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel-national"
+                value={phone}
+                onChange={(v) => setPhone(formatPhone(v))}
+              />
+              <button type="submit" className="v3-btn v3-btn-primary">
+                Continue
+              </button>
+            </form>
+
+            <div className="v3-createpk-learn">
               <button
                 type="button"
                 className="v3-linkbtn"
                 onClick={() => {
-                  writeState({ offerDeclined: true })
-                  logEvent('passkey_offer_skipped')
-                  go(ACCOUNT_HREF)
+                  logEvent('learn_more_opened')
+                  setModalOpen(true)
                 }}
               >
-                Not now
+                Learn More
               </button>
-            ) : (
-              <button type="button" className="v3-linkbtn" onClick={() => go(SIGN_IN_HREF)}>
-                Back to sign in
-              </button>
-            )}
-          </span>
+            </div>
+          </div>
         </div>
-
-        <div className="v3-mob v3-ctr">{note}</div>
-      </div>
       </div>
 
       {modalOpen ? <WhatIsAPasskey onClose={() => setModalOpen(false)} /> : null}

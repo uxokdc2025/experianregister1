@@ -238,4 +238,22 @@ body > div[role="note"] { display: none !important; }
 .v3-done-steps { margin-top: 26px; text-align: left; background: #F5F5F8; border-radius: 10px; padding: 18px 18px 8px; }
 .v3-done-more { border-top: 1px solid #E0E0E8; margin-top: 12px; padding: 10px 0 6px; }
 .v3-done-more summary { cursor: pointer; font-size: 14.5px; font-weight: 600; color: #26478D; }
+
+/* ── D2 / create-passkey (Figma Holder 7:11233) ──
+   24px stack, 244×152 illustration, 32/20/16 type, 370px form. */
+.v3-createpk { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 24px; width: 100%; }
+.v3-createpk-graphic { display: flex; align-items: center; justify-content: center; padding: 16px 0; line-height: 0; }
+.v3-createpk-graphic img { display: block; }
+.v3-createpk-title { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100%; }
+.v3-createpk-title h1 { margin: 0; font-size: 32px; font-weight: 500; line-height: 1.3; letter-spacing: 0; color: #000; }
+.v3-createpk-title p { margin: 0; font-size: 20px; font-weight: 500; line-height: 1.3; color: #000; }
+.v3-createpk-body { margin: 0; max-width: 370px; font-size: 16px; font-weight: 400; line-height: 1.5; color: #667085; }
+.v3-createpk-actions { width: 100%; max-width: 370px; display: flex; flex-direction: column; gap: 16px; }
+.v3-createpk-form { display: flex; flex-direction: column; gap: 16px; width: 100%; }
+.v3-createpk-learn { display: flex; align-items: center; justify-content: center; min-height: 48px; }
+.v3-createpk-learn .v3-linkbtn { font-size: 14px; font-weight: 500; line-height: 1.5; color: #2560CD; }
+@media (max-width: 767px) {
+  .v3-createpk-title h1 { font-size: 32px; }
+  .v3-createpk-actions, .v3-createpk-body { max-width: none; }
+}
 `
