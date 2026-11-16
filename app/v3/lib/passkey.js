@@ -3,7 +3,7 @@
    clearly-labelled simulated "Demo" prompt for devices that can't
    make passkeys. No backend: nothing is sent anywhere, attestation
    and assertions are never verified (design prototype). We keep
-   only the credential id, a created date and a device label.
+   only the credential id, a created date and a label (the tester's phone).
 
    Contract: callers invoke startPasskeyCreation() / startPasskeySignIn()
    SYNCHRONOUSLY inside the click handler — no await before it —
@@ -23,7 +23,7 @@ import {
   PASSKEY_UNSUPPORTED_HREF,
   go,
 } from './routes'
-import { PERSONA, deviceLabel, logEvent, readState, writeState } from './state'
+import { PERSONA, formatPhone, logEvent, readState, writeState } from './state'
 
 /* ─── base64url ─── */
 export function toB64url(buf) {
@@ -116,6 +116,14 @@ function userId() {
   return id
 }
 
+/* Phone shown in the OS passkey prompt (user.name / displayName) and as
+   the default stored passkey label. Uses what the tester typed, formatted
+   like (941) 992-9182; falls back to the persona number if none is saved. */
+function passkeyUserName() {
+  return formatPhone(readState().phone) || PERSONA.phone
+}
+
+
 /**
  * Start passkey creation. CALL SYNCHRONOUSLY FROM THE CLICK HANDLER.
  * @returns {Promise<{ ok: boolean, mode: 'real'|'sim', id?: string, reason?: string }>}
@@ -135,7 +143,7 @@ export function startPasskeyCreation() {
     call = navigator.credentials.create({
       publicKey: {
         rp: { id: window.location.hostname, name: 'Experian' },
-        user: { id: userId(), name: PERSONA.email, displayName: PERSONA.name },
+        user: { id: userId(), name: passkeyUserName(), displayName: passkeyUserName() },
         challenge: randomBytes(32),
         pubKeyCredParams: [
           { type: 'public-key', alg: -7 },
@@ -165,7 +173,7 @@ export function finishCreation(result, { onStay } = {}) {
     const now = new Date().toISOString()
     // creating it needed the user's face / fingerprint / PIN, so it counts as used today;
     // smsPending makes the account page show the X1 SMS notice once
-    writeState({ passkey: { id: result.id, name: deviceLabel(), createdAt: now, lastUsed: now, mode: result.mode }, smsPending: now })
+    writeState({ passkey: { id: result.id, name: passkeyUserName(), createdAt: now, lastUsed: now, mode: result.mode }, smsPending: now })
     logEvent('passkey_created', result.mode)
     go(PASSKEY_CREATED_HREF)
     return
@@ -241,7 +249,7 @@ export function recordPasskeySignIn(result) {
   if (s.passkey) writeState({ passkey: { ...s.passkey, lastUsed: now }, signedIn: true })
   // After a restart (state wiped) the passkey still lives on the device; autofill
   // can sign in with it, so re-list it (creation date unknown in this browser).
-  else writeState({ passkey: { id: result.id, name: deviceLabel(), createdAt: null, lastUsed: now, mode: result.mode }, signedIn: true })
+  else writeState({ passkey: { id: result.id, name: passkeyUserName(), createdAt: null, lastUsed: now, mode: result.mode }, signedIn: true })
   logEvent('passkey_sign_in', result.mode)
 }
 
