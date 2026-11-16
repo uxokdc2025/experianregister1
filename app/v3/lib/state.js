@@ -44,17 +44,16 @@ export function writeState(patch) {
   return next
 }
 
-/* Wipes every piece of V3 demo state in this browser: all exp_v3*
-   keys in localStorage and sessionStorage, and any exp_v3* cookie.
-   (It can't remove a passkey from the device's password manager.) */
+/* Wipes this browser's site data for the prototype: every localStorage
+   and sessionStorage key (exp_v3* and anything else on this origin),
+   and every JS-visible cookie. Used by the homepage Reset link (and
+   "Start over" on /v3/done). It can't remove a passkey from the
+   device's password manager. */
 export function clearState() {
   if (typeof window === 'undefined') return
   for (const store of ['localStorage', 'sessionStorage']) {
     try {
-      const s = window[store]
-      Object.keys(s)
-        .filter((k) => k.startsWith(STORAGE_KEY))
-        .forEach((k) => s.removeItem(k))
+      window[store].clear()
     } catch {
       /* private mode — ignore */
     }
@@ -63,7 +62,7 @@ export function clearState() {
     document.cookie
       .split(';')
       .map((c) => c.split('=')[0].trim())
-      .filter((name) => name.startsWith(STORAGE_KEY))
+      .filter(Boolean)
       .forEach((name) => {
         document.cookie = `${name}=; Max-Age=0; path=/`
       })
@@ -72,10 +71,16 @@ export function clearState() {
   }
 }
 
-/* Logo click: clear the demo and start over on the V3 homepage. */
+/* Go to the V3 homepage without clearing any state. The Experian logo
+   uses this so a tester can return home and sign in with a passkey. */
+export function goHome() {
+  if (typeof window !== 'undefined') window.location.assign('/')
+}
+
+/* Reset link (and "Start over"): clear all site data, then reload /. */
 export function restartDemo() {
   clearState()
-  window.location.assign('/v3')
+  goHome()
 }
 
 /* Study events stay local; nothing is ever sent anywhere. */

@@ -60,13 +60,38 @@ export default function SignInPage() {
 
   useEffect(() => {
     const s = readState()
-    setHasPasskey(Boolean(s.passkey))
+    const stored = Boolean(s.passkey)
+    setHasPasskey(stored)
     let alive = true
-    /* Autofill: the browser offers a saved passkey from the input (autocomplete="username webauthn"). */
-    probePasskeySupport().then(() => {
-      const p = alive ? startConditionalSignIn() : null
-      if (p) p.then((r) => { if (alive && r && r.ok) succeed(r) })
-    })
+
+    if (stored) {
+      /* Returning tester: abort conditional autofill, then shortly after
+         paint open the same modal credentials.get prompt as the button.
+         Once per page load. Cancel / NotAllowed (Safari often needs a
+         user gesture) stays on this page quietly; the button remains. */
+      abortConditional()
+      timers.current.push(setTimeout(() => {
+        if (!alive) return
+        const attempt = startPasskeySignIn()
+        setPkState('waiting')
+        logEvent('passkey_sign_in_auto_started')
+        attempt.then((r) => {
+          if (!alive) return
+          if (r.ok) succeed(r)
+          else {
+            logEvent('passkey_sign_in_auto_cancelled', r.reason)
+            setPkState('idle')
+          }
+        })
+      }, 400))
+    } else {
+      /* Autofill: the browser offers a saved passkey from the input (autocomplete="username webauthn"). */
+      probePasskeySupport().then(() => {
+        const p = alive ? startConditionalSignIn() : null
+        if (p) p.then((r) => { if (alive && r && r.ok) succeed(r) })
+      })
+    }
+
     return () => {
       alive = false
       abortConditional()

@@ -10,11 +10,27 @@
 import { useState } from 'react'
 import { RestartLogo } from '../_components/Chrome'
 import { HOME_CTA_HREF, go } from '../lib/routes'
+import { restartDemo } from '../lib/state'
 
 const PINK = 'var(--color-pink-400)'
 const BLUE_DEEP = 'var(--color-blue-800)'
 const INK = '#0D0D1F'
 const FLOW_HREF = HOME_CTA_HREF
+
+function UtilityBar() {
+  return (
+    <div style={{ background: 'var(--color-neutral-50)', borderBottom: '1px solid var(--color-neutral-100)', padding: '8px 18px', display: 'flex', justifyContent: 'flex-end', flexShrink: 0 }}>
+      <button
+        type="button"
+        className="lnk"
+        onClick={restartDemo}
+        style={{ fontSize: 12.5, fontWeight: 500, color: 'var(--color-neutral-600)', background: 'none', border: 0, padding: 0, fontFamily: 'inherit', cursor: 'pointer' }}
+      >
+        Reset
+      </button>
+    </div>
+  )
+}
 
 function TopBar() {
   return (
@@ -164,6 +180,7 @@ function LandingBody() {
   const [active, setActive] = useState(0)
   return (
     <>
+      <UtilityBar />
       <TopBar />
 
       <main id="main-content" style={{ flex: 1, overflowY: 'auto', paddingBottom: 40 }}>

@@ -12,6 +12,7 @@ import { Button } from '../../../components/Button'
 import { Card } from '../../../components/Card'
 import { RestartLogo } from '../_components/Chrome'
 import { HOME_CTA_HREF, go } from '../lib/routes'
+import { restartDemo } from '../lib/state'
 
 /* ───────────── Icons ───────────── */
 const Ico = {
@@ -61,6 +62,14 @@ function UtilityBar() {
         </div>
         <div style={{ display: 'flex', gap: 24 }}>
           {right.map(([l, c]) => <a key={l} className="lnk" style={{ fontSize: 12.5, fontWeight: 500, color: 'var(--color-neutral-600)', display: 'flex', alignItems: 'center', gap: 4 }}>{l}{c && <Ico.chevDown />}</a>)}
+          <button
+            type="button"
+            className="lnk"
+            onClick={restartDemo}
+            style={{ fontSize: 12.5, fontWeight: 500, color: 'var(--color-neutral-600)', display: 'inline-flex', alignItems: 'center', background: 'none', border: 0, padding: 0, fontFamily: 'inherit', cursor: 'pointer' }}
+          >
+            Reset
+          </button>
         </div>
       </div>
     </div>

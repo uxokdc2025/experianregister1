@@ -1,6 +1,6 @@
 'use client'
 
-import { restartDemo } from '../lib/state'
+import { goHome } from '../lib/state'
 
 /* ──────────────────────────────────────────────────────────────
    Shared V3 chrome: Experian header, footer (desktop + stacked
@@ -17,11 +17,11 @@ import { restartDemo } from '../lib/state'
 const TRADEMARK =
   'Experian and the Experian trademarks used herein are trademarks or registered trademarks of Experian Information Solutions, Inc., ConsumerInfo.com, Inc. or its affiliates. Other product or company names mentioned herein are the property of their respective owners.'
 
-/* The Experian logo in every V3 header doubles as the demo restart:
-   clears all V3 demo state and goes to the V3 homepage. */
+/* The Experian logo goes to the V3 homepage and leaves demo state
+   (including a stored passkey) alone. Reset on the homepage clears. */
 export function RestartLogo({ height, imgStyle }) {
   return (
-    <button type="button" className="v3-logo-btn" aria-label="Experian home" onClick={restartDemo}>
+    <button type="button" className="v3-logo-btn" aria-label="Experian home" onClick={goHome}>
       <img src="/uploads/Experian.png" alt="Experian" style={{ display: 'block', height, width: 'auto', ...imgStyle }} />
     </button>
   )

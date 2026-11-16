@@ -5,7 +5,9 @@
    account page (the demo bars are gone). Tells the tester a
    harmless demo passkey was saved for THIS site's host name and
    how to delete it, asks the browser (best-effort) to drop it,
-   and "Start over" wipes the demo and returns to the homepage.
+   and "Start over" wipes the demo (same Reset helper as the homepage
+   link next to Global Sites) and returns to the homepage. The Experian
+   logo now goes home without clearing state.
    ────────────────────────────────────────────────────────────── */
 
 import { useEffect, useState } from 'react'
