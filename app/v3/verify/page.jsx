@@ -114,7 +114,7 @@ export default function VerifyPage() {
         </button>
       </DesktopActionBar>
 
-      <div className="v3-mob" style={{ flexShrink: 0, padding: '12px 20px 28px' }}>
+      <div className="v3-mob v3-actionbar v3-actionbar-mob">
         <button type="button" className="v3-btn v3-btn-primary" onClick={onSendCode}>
           Send code
         </button>

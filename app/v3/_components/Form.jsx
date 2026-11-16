@@ -3,9 +3,9 @@
 import { useId, useState } from 'react'
 
 /* ──────────────────────────────────────────────────────────────
-   V3 form controls. The label is a real <label> at every size —
-   it just moves to the top of the box once the field is focused
-   or filled, which is how the Figma frames read.
+   V3 form controls. Field is the earlier prototype's float-label
+   input (V2 register FloatField look, styles in styles.js .v3-field):
+   a real <label> that floats to the top once focused or filled.
    ────────────────────────────────────────────────────────────── */
 
 export function Field({
@@ -23,7 +23,7 @@ export function Field({
   const [focused, setFocused] = useState(false)
   const active = focused || String(value ?? '').length > 0
   return (
-    <div className={`v3-field${active ? ' is-active' : ''}`}>
+    <div className={`v3-field${active ? ' is-active' : ''}${focused ? ' is-focused' : ''}`}>
       <label className="v3-field-label" htmlFor={id}>
         {label}
       </label>

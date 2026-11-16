@@ -72,7 +72,7 @@ export default function PasskeyNotCreatedPage() {
         </button>
 
         <div style={{ marginTop: 12 }}>
-          <button type="button" className="v3-linkbtn" onClick={() => go(`${VERIFY_HREF}?flow=signin`)}>
+          <button type="button" className="v3-linkbtn" onClick={() => { writeState({ offerDeclined: true }); go(`${VERIFY_HREF}?flow=signin`) }}>
             Continue with phone
           </button>
         </div>

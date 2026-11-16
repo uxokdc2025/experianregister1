@@ -14,7 +14,7 @@ import { PageShell } from '../_components/Chrome'
 import { Field } from '../_components/Form'
 import { Modal } from '../_components/Modal'
 import { PasskeyBadges } from '../_components/Art'
-import { SIGN_IN_HREF, VERIFY_HREF, go } from '../lib/routes'
+import { ACCOUNT_HREF, SIGN_IN_HREF, VERIFY_HREF, go } from '../lib/routes'
 import { formatPhone, logEvent, readState, writeState } from '../lib/state'
 
 const STEPS = [
@@ -96,10 +96,12 @@ function WhatIsAPasskey({ onClose }) {
 export default function CreatePasskeyPage() {
   const [phone, setPhone] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
+  const [signedIn, setSignedIn] = useState(false)
 
   useEffect(() => {
-    const saved = readState().phone
-    if (saved) setPhone(formatPhone(saved))
+    const s = readState()
+    if (s.phone) setPhone(formatPhone(s.phone))
+    setSignedIn(Boolean(s.signedIn))
   }, [])
 
   const onContinue = () => {
@@ -116,6 +118,9 @@ export default function CreatePasskeyPage() {
 
   return (
     <PageShell>
+      {/* the passkey offer floats in (V2's intro-rise motion), most visibly
+          right after the sign-in spinner → check on /v3/code */}
+      <div className="intro-rise">
       <div className="v3-ctr-mobleft">
         <div className="v3-art v3-art-mobleft">
           <PasskeyBadges size={0.86} />
@@ -168,13 +173,28 @@ export default function CreatePasskeyPage() {
             </button>
           </span>
           <span>
-            <button type="button" className="v3-linkbtn" onClick={() => go(SIGN_IN_HREF)}>
-              Back to sign in
-            </button>
+            {signedIn ? (
+              <button
+                type="button"
+                className="v3-linkbtn"
+                onClick={() => {
+                  writeState({ offerDeclined: true })
+                  logEvent('passkey_offer_skipped')
+                  go(ACCOUNT_HREF)
+                }}
+              >
+                Not now
+              </button>
+            ) : (
+              <button type="button" className="v3-linkbtn" onClick={() => go(SIGN_IN_HREF)}>
+                Back to sign in
+              </button>
+            )}
           </span>
         </div>
 
         <div className="v3-mob v3-ctr">{note}</div>
+      </div>
       </div>
 
       {modalOpen ? <WhatIsAPasskey onClose={() => setModalOpen(false)} /> : null}

@@ -201,10 +201,10 @@ export function VerifyTopBar({ title, mobileTitle, onClose, className = '' }) {
   )
 }
 
-/* Right-aligned bottom action bar — desktop only (D4/D5). */
+/* Right-aligned bottom action bar, pinned to the viewport bottom — desktop only (D4/D5). */
 export function DesktopActionBar({ children }) {
   return (
-    <div className="v3-desk" style={{ flexShrink: 0, borderTop: '1px solid #EAEAEF', background: '#fff', padding: '18px 40px' }}>
+    <div className="v3-desk v3-actionbar">
       <div style={{ maxWidth: 1480, margin: '0 auto', display: 'flex', justifyContent: 'flex-end' }}>{children}</div>
     </div>
   )

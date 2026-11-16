@@ -11,6 +11,17 @@ export const metadata = {
   robots: { index: false, follow: false },
 }
 
+/* Same as the root viewport plus viewport-fit=cover, so the pinned
+   bottom bar can pad for the iPhone home indicator (safe-area). */
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: 'cover',
+  themeColor: '#BA2F7D',
+  colorScheme: 'light',
+}
+
 export default function V3Layout({ children }) {
   return (
     <>

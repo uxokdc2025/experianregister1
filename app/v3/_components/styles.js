@@ -47,15 +47,36 @@ body > div[role="note"] { display: none !important; }
 .v3-topbar-title { font-size: 17px; font-weight: 700; color: #1E1E35; }
 @media (max-width: 767px) { .v3-topbar-title { font-size: 16px; font-weight: 500; } }
 
-/* ── fields ── */
-.v3-field { position: relative; display: block; width: 100%; border: 1px solid #C9C9D6; border-radius: 8px; background: #fff; transition: border-color .12s ease, box-shadow .12s ease; }
-.v3-field:focus-within { border-color: #406EB3; box-shadow: 0 0 0 1px #406EB3; }
-.v3-field-label { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 15px; color: #6B6B88; pointer-events: none; transition: top .12s ease, font-size .12s ease, color .12s ease; }
-.v3-field.is-active .v3-field-label { top: 10px; transform: none; font-size: 11.5px; font-weight: 700; color: #26478D; letter-spacing: .01em; }
-.v3-field-input { display: block; width: 100%; border: 0; outline: 0; background: transparent; font-family: inherit; font-size: 16px; color: #1E1E35; padding: 25px 14px 11px; border-radius: 8px; }
+/* ── fields ──
+   Same float-label input as the earlier prototype (V2 register
+   FloatField): 58px box, 1.5px neutral-200 border, pink on focus,
+   label floats to 11px/700 at the top once focused or filled. */
+.v3-field { position: relative; display: block; width: 100%; min-width: 0; }
+.v3-field-label { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; white-space: nowrap; font-size: 14.5px; font-weight: 500; color: var(--color-neutral-500); letter-spacing: 0; transition: top .15s var(--ease-default, ease), font-size .15s var(--ease-default, ease), color .15s; }
+.v3-field.is-active .v3-field-label { top: 9px; transform: none; font-size: 11px; font-weight: 700; letter-spacing: .01em; }
+.v3-field.is-focused .v3-field-label { color: var(--color-pink-400); }
+.v3-field-input { display: block; width: 100%; height: 58px; border: 1.5px solid var(--color-neutral-200); background: #fff; border-radius: 8px; padding: 0 14px; font-family: inherit; font-size: 14.5px; color: var(--color-neutral-800, #1E1E35); outline: none; transition: border-color .15s; }
+.v3-field.is-active .v3-field-input { padding: 22px 14px 0; }
+.v3-field.is-focused .v3-field-input { border-color: var(--color-pink-400); }
 .v3-field-input::placeholder { color: transparent; }
+/* iOS zooms into inputs under 16px; keep the V2 look but stop the zoom on phones */
+@media (max-width: 767px) { .v3-field-input { font-size: 16px; } }
+
+/* ── pinned bottom action bar (D4/D5 desktop, M4 phone) ──
+   Sticky to the bottom of the viewport like V2's fixed StickyBar,
+   but in flow, so content never hides behind it. */
+.v3-actionbar { position: sticky; bottom: 0; z-index: 30; flex-shrink: 0; background: #fff; border-top: 1px solid #EAEAEF; box-shadow: 0 -2px 14px rgba(13,13,31,.08); padding: 16px 40px calc(16px + env(safe-area-inset-bottom, 0px)); }
+.v3-actionbar-mob { padding: 12px 20px calc(16px + env(safe-area-inset-bottom, 0px)); }
 
 /* ── buttons ── */
+/* sign-in success inside the CTA: spinner → check (keeps the button's size) */
+.v3-btn-busy, .v3-btn-busy:disabled { background: #BA2F7D !important; color: #fff; cursor: default; pointer-events: none; }
+.v3-btn-spin { display: inline-block; width: 22px; height: 22px; border-radius: 50%; border: 3px solid rgba(255,255,255,.35); border-top-color: #fff; animation: v3spin .8s linear infinite; }
+.v3-btn-check { display: inline-flex; animation: popIn .28s cubic-bezier(.22,.61,.36,1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .v3-btn-spin { animation: none; border-color: #fff; border-top-color: rgba(255,255,255,.35); }
+  .v3-btn-check, .intro-rise { animation: none !important; }
+}
 .v3-btn { display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 50px; padding: 13px 24px; border: 0; border-radius: 8px; font-family: inherit; font-size: 16px; font-weight: 700; line-height: 1.2; cursor: pointer; transition: background-color .12s ease, color .12s ease; }
 .v3-btn-primary { background: #BA2F7D; color: #fff; }
 .v3-btn-primary:hover:not(:disabled) { background: #A22670; }
@@ -112,6 +133,19 @@ body > div[role="note"] { display: none !important; }
   .v3-signin-card { background: none; border-radius: 0; padding: 0; box-shadow: none; }
   .v3-signin-grid { grid-template-columns: 1fr; gap: 26px; margin-top: 18px; }
   .v3-app-panel { flex-direction: column-reverse; align-items: center; text-align: center; padding: 26px 18px; }
+}
+
+/* ── D1/M1 extras: forgot links, Google button ── */
+.v3-forgot { display: flex; justify-content: center; gap: 22px; margin-top: 14px; }
+.v3-forgot .v3-linkbtn { font-size: 14px; font-weight: 600; color: #26478D; }
+@media (max-width: 767px) { .v3-forgot .v3-linkbtn { font-weight: 400; text-decoration: underline; color: #35354E; } }
+.v3-google { display: inline-flex; align-items: center; gap: 0; margin-top: 12px; padding: 2px; border: 0; border-radius: 4px; background: #1A73E8; color: #fff; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; min-height: 40px; }
+.v3-google-g { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #fff; border-radius: 3px; }
+.v3-google-txt { padding: 0 14px 0 12px; }
+@media (max-width: 767px) {
+  .v3-google { display: flex; width: 100%; min-height: 50px; border-radius: 8px; background: #4285F4; font-size: 15px; }
+  .v3-google-g { width: 44px; height: 44px; border-radius: 6px; }
+  .v3-google-txt { flex: 1; text-align: center; padding-right: 44px; }
 }
 
 /* ── art alignment: centred on desktop, flush left on M2 ── */

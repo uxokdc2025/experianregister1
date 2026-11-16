@@ -19,6 +19,7 @@ import { PhoneSignal } from '../_components/Art'
 import { startPasskeyCreation } from '../lib/passkey'
 import {
   ACCOUNT_HREF,
+  CREATE_PASSKEY_HREF,
   PASSKEY_CREATED_HREF,
   PASSKEY_NOT_CREATED_HREF,
   SIGN_IN_HREF,
@@ -34,6 +35,8 @@ export default function CodePage() {
   const [flow, setFlow] = useState('create')
   const [tail, setTail] = useState(DEFAULT_LAST4)
   const [resent, setResent] = useState(false)
+  const [signinState, setSigninState] = useState('idle') // 'idle' | 'loading' | 'done'
+  const signinTimers = useRef([])
   const stubFail = useRef(false)
   const resentTimer = useRef(null)
 
@@ -45,7 +48,10 @@ export default function CodePage() {
     setTail(last4(saved.phone))
     /* dev-only: ?stub=fail drives the D8/M8 screen until card 2 lands */
     stubFail.current = params.get('stub') === 'fail'
-    return () => clearTimeout(resentTimer.current)
+    return () => {
+      clearTimeout(resentTimer.current)
+      signinTimers.current.forEach(clearTimeout)
+    }
   }, [])
 
   const ready = code.length === 6
@@ -54,8 +60,20 @@ export default function CodePage() {
     if (!ready) return
 
     if (flow !== 'create') {
+      if (signinState !== 'idle') return
       logEvent('otp_verified', 'signin')
-      go(ACCOUNT_HREF)
+      /* Sign-in success: spinner in the CTA (~1.2s), then a check mark
+         (~0.8s), then the passkey offer floats in (D2/M2). Testers who
+         already made a passkey, or chose "Not now" / "Continue with
+         phone", go to the account page instead. */
+      const s = readState()
+      const next = s.passkey || s.offerDeclined ? ACCOUNT_HREF : `${CREATE_PASSKEY_HREF}?from=signin`
+      writeState({ signedIn: true })
+      setSigninState('loading')
+      signinTimers.current.push(
+        setTimeout(() => setSigninState('done'), 1200),
+        setTimeout(() => go(next), 2000),
+      )
       return
     }
 
@@ -89,8 +107,24 @@ export default function CodePage() {
   if (phase === 'setting-up') return <SettingUp />
 
   const verifyButton = (className) => (
-    <button type="submit" form={FORM_ID} className={className} disabled={!ready}>
-      Verify
+    <button
+      type="submit"
+      form={FORM_ID}
+      className={`${className}${signinState !== 'idle' ? ' v3-btn-busy' : ''}`}
+      disabled={!ready}
+      aria-busy={signinState === 'loading'}
+    >
+      {signinState === 'loading' ? (
+        <span className="v3-btn-spin" role="status" aria-label="Signing in" />
+      ) : signinState === 'done' ? (
+        <span className="v3-btn-check" role="status" aria-label="Signed in">
+          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      ) : (
+        'Verify'
+      )}
     </button>
   )
 
