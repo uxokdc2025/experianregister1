@@ -138,7 +138,7 @@ export default function CoverPage() {
         <div style={{ height: 6, background: 'var(--gradient-brand)' }} />
         <div style={{ padding: '44px 48px 40px', textAlign: 'center' }}>
           <img
-            src="/uploads/Experian.png"
+            src="/uploads/brand-logo.png"
             alt="Experian"
             style={{ height: 34, width: 'auto', margin: '0 auto 22px' }}
           />

@@ -37,7 +37,7 @@ const BIco = {
 function RegLogo({ size = 30 }) {
   return (
     <div onClick={() => window.location.assign('/')} title="Back to homepage" style={{ cursor: 'pointer', width: 'fit-content', lineHeight: 0 }}>
-      <img src="/uploads/Experian.png" alt="Experian" style={{ display: 'block', height: size * 1.2, width: 'auto' }} />
+      <img src="/uploads/brand-logo.png" alt="Experian" style={{ display: 'block', height: size * 1.2, width: 'auto' }} />
     </div>
   )
 }

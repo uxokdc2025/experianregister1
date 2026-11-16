@@ -77,7 +77,7 @@ function Dots({ active = 0 }) {
 }
 
 function MLogo({ size = 30 }) {
-  return <img onClick={() => go('/')} src="/uploads/Experian.png" alt="Experian" title="Back to start" style={{ height: size, width: 'auto', display: 'block', cursor: 'pointer' }} />
+  return <img onClick={() => go('/')} src="/uploads/brand-logo.png" alt="Experian" title="Back to start" style={{ height: size, width: 'auto', display: 'block', cursor: 'pointer' }} />
 }
 
 function CTA({ children, disabled, onClick }) {

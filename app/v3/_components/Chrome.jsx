@@ -22,7 +22,7 @@ const TRADEMARK =
 export function RestartLogo({ height, imgStyle }) {
   return (
     <button type="button" className="v3-logo-btn" aria-label="Experian home" onClick={goHome}>
-      <img src="/uploads/Experian.png" alt="Experian" style={{ display: 'block', height, width: 'auto', ...imgStyle }} />
+      <img src="/uploads/brand-logo.png" alt="Experian" style={{ display: 'block', height, width: 'auto', ...imgStyle }} />
     </button>
   )
 }
