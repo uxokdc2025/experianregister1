@@ -96,6 +96,7 @@ export default function SignInPage() {
   const remember = (flow) => writeState({ phone: digitsOnly(login).length === 10 ? login : PERSONA.phone, flow })
 
   const onSignIn = () => {
+    if (pkState === 'loading' || pkState === 'done') return
     abortConditional()
     remember('signin')
     logEvent('signin_phone_submitted')
@@ -140,9 +141,26 @@ export default function SignInPage() {
                     onChange={setLogin}
                   />
 
-                  <button type="submit" className="v3-btn v3-btn-primary" style={{ marginTop: 16 }}>
-                    <span className="v3-desk-i">Sign In</span>
-                    <span className="v3-mob-i">Sign in</span>
+                  {/* autofill (conditional) passkey sign-in with no listed passkey animates this CTA */}
+                  <button
+                    type="submit"
+                    className={`v3-btn v3-btn-primary${!hasPasskey && pkState !== 'idle' && pkState !== 'waiting' ? ' v3-btn-busy' : ''}`}
+                    style={{ marginTop: 16 }}
+                  >
+                    {!hasPasskey && pkState === 'loading' ? (
+                      <span className="v3-btn-spin" role="status" aria-label="Signing in" />
+                    ) : !hasPasskey && pkState === 'done' ? (
+                      <span className="v3-btn-check" role="status" aria-label="Signed in">
+                        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none">
+                          <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </span>
+                    ) : (
+                      <>
+                        <span className="v3-desk-i">Sign In</span>
+                        <span className="v3-mob-i">Sign in</span>
+                      </>
+                    )}
                   </button>
                 </form>
 

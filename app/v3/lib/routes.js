@@ -17,6 +17,7 @@ export const PASSKEY_NOT_CREATED_HREF = '/v3/passkey/not-created'
 export const PASSKEY_EXISTS_HREF = '/v3/passkey/exists'
 export const PASSKEY_UNSUPPORTED_HREF = '/v3/passkey/unsupported'
 export const ACCOUNT_HREF = '/v3/account'
+export const DONE_HREF = '/v3/done'
 
 /* Plain assignment keeps these prototype hops simple and lets a
    tester use the browser's Back button exactly as they'd expect. */

@@ -163,7 +163,9 @@ export function startPasskeyCreation() {
 export function finishCreation(result, { onStay } = {}) {
   if (result.ok) {
     const now = new Date().toISOString()
-    writeState({ passkey: { id: result.id, name: deviceLabel(), createdAt: now, lastUsed: null, mode: result.mode } })
+    // creating it needed the user's face / fingerprint / PIN, so it counts as used today;
+    // smsPending makes the account page show the X1 SMS notice once
+    writeState({ passkey: { id: result.id, name: deviceLabel(), createdAt: now, lastUsed: now, mode: result.mode }, smsPending: now })
     logEvent('passkey_created', result.mode)
     go(PASSKEY_CREATED_HREF)
     return
@@ -235,8 +237,38 @@ export function startPasskeySignIn() {
 
 export function recordPasskeySignIn(result) {
   const s = readState()
-  if (s.passkey) writeState({ passkey: { ...s.passkey, lastUsed: new Date().toISOString() }, signedIn: true })
+  const now = new Date().toISOString()
+  if (s.passkey) writeState({ passkey: { ...s.passkey, lastUsed: now }, signedIn: true })
+  // After a restart (state wiped) the passkey still lives on the device; autofill
+  // can sign in with it, so re-list it (creation date unknown in this browser).
+  else writeState({ passkey: { id: result.id, name: deviceLabel(), createdAt: null, lastUsed: now, mode: result.mode }, signedIn: true })
   logEvent('passkey_sign_in', result.mode)
+}
+
+/* Best-effort: tell the browser / password manager this credential is gone
+   (Chrome + Google Password Manager can then hide or delete it). Never throws. */
+export function signalRemoved(id) {
+  try {
+    const PKC = typeof window !== 'undefined' && window.PublicKeyCredential
+    if (PKC && PKC.signalUnknownCredential && id && !String(id).startsWith('sim-')) {
+      PKC.signalUnknownCredential({ rpId: window.location.hostname, credentialId: id }).catch(() => {})
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+/* End of study: ask the password manager to drop every passkey for this user. */
+export function signalStudyOver() {
+  try {
+    const PKC = typeof window !== 'undefined' && window.PublicKeyCredential
+    const uid = readState().userId
+    if (PKC && PKC.signalAllAcceptedCredentials && uid) {
+      PKC.signalAllAcceptedCredentials({ rpId: window.location.hostname, userId: uid, allAcceptedCredentialIds: [] }).catch(() => {})
+    }
+  } catch {
+    /* ignore */
+  }
 }
 
 /* The host name testers see in the browser prompt (for disclosure copy). */
