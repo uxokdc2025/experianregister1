@@ -8,6 +8,7 @@
    ────────────────────────────────────────────────────────────── */
 
 import { useState } from 'react'
+import { RestartLogo } from '../_components/Chrome'
 import { HOME_CTA_HREF, go } from '../lib/routes'
 
 const PINK = 'var(--color-pink-400)'
@@ -21,7 +22,7 @@ function TopBar() {
       <button aria-label="Menu" style={{ background: 'transparent', border: 'none', padding: 6, cursor: 'pointer', color: INK }}>
         <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
       </button>
-      <img src="/uploads/Experian.png" alt="Experian" style={{ height: 22, width: 'auto' }} />
+      <RestartLogo height={22} />
       <button aria-label="Search" style={{ background: 'transparent', border: 'none', padding: 6, cursor: 'pointer', color: INK }}>
         <svg aria-hidden="true" width="22" height="22" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="currentColor" strokeWidth="1.8"/><path d="M14 14l4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
       </button>

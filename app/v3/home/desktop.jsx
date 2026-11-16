@@ -10,6 +10,7 @@
 import { useState } from 'react'
 import { Button } from '../../../components/Button'
 import { Card } from '../../../components/Card'
+import { RestartLogo } from '../_components/Chrome'
 import { HOME_CTA_HREF, go } from '../lib/routes'
 
 /* ───────────── Icons ───────────── */
@@ -44,7 +45,7 @@ const Social = {
 function Logo({ size = 26 }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', lineHeight: 0 }}>
-      <img src="/uploads/Experian.png" alt="Experian" style={{ display: 'block', height: size * 1.2, width: 'auto' }} />
+      <RestartLogo height={size * 1.2} />
     </div>
   )
 }

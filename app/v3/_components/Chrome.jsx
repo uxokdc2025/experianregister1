@@ -1,5 +1,7 @@
 'use client'
 
+import { restartDemo } from '../lib/state'
+
 /* ──────────────────────────────────────────────────────────────
    Shared V3 chrome: Experian header, footer (desktop + stacked
    mobile), the page shell those two wrap, and the "Verify
@@ -15,6 +17,16 @@
 const TRADEMARK =
   'Experian and the Experian trademarks used herein are trademarks or registered trademarks of Experian Information Solutions, Inc., ConsumerInfo.com, Inc. or its affiliates. Other product or company names mentioned herein are the property of their respective owners.'
 
+/* The Experian logo in every V3 header doubles as the demo restart:
+   clears all V3 demo state and goes to the V3 homepage. */
+export function RestartLogo({ height, imgStyle }) {
+  return (
+    <button type="button" className="v3-logo-btn" aria-label="Experian home" onClick={restartDemo}>
+      <img src="/uploads/Experian.png" alt="Experian" style={{ display: 'block', height, width: 'auto', ...imgStyle }} />
+    </button>
+  )
+}
+
 export function ExperianHeader({ className = '' }) {
   return (
     <header
@@ -28,10 +40,10 @@ export function ExperianHeader({ className = '' }) {
       }}
     >
       <div className="v3-desk" style={{ maxWidth: 1480, margin: '0 auto', padding: '24px 40px' }}>
-        <img src="/uploads/Experian.png" alt="Experian" style={{ height: 42, width: 'auto' }} />
+        <RestartLogo height={42} />
       </div>
       <div className="v3-mob" style={{ padding: '14px 16px' }}>
-        <img src="/uploads/Experian.png" alt="Experian" style={{ height: 30, width: 'auto' }} />
+        <RestartLogo height={30} />
       </div>
     </header>
   )

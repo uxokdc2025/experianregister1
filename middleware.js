@@ -21,7 +21,9 @@ const V3_ONLY = process.env.SITE_MODE === 'v3'
 function v3OnlySite(req) {
   const { pathname } = req.nextUrl
   if (pathname === '/') return NextResponse.rewrite(new URL('/v3', req.url))
-  if (pathname === '/v3' || pathname.startsWith('/v3/') || pathname.startsWith('/uploads/')) {
+  // /v3 itself (logo restart, account "home" button) shows as the clean "/".
+  if (pathname === '/v3') return NextResponse.redirect(new URL('/', req.url))
+  if (pathname.startsWith('/v3/') || pathname.startsWith('/uploads/')) {
     return NextResponse.next()
   }
   return NextResponse.redirect(new URL('/', req.url))

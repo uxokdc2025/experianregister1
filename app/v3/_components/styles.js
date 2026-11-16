@@ -18,15 +18,20 @@ export const V3_CSS = `
 @media (max-width: 767px) { .v3-col-verify { padding-top: 14px; } }
 
 /* ── 767px switch: every screen ships both layouts ── */
-.v3-desk { display: block; }
-.v3-mob  { display: none; }
-.v3-desk-i { display: inline; }
-.v3-mob-i  { display: none; }
-@media (max-width: 767px) {
-  .v3-desk, .v3-desk-i { display: none; }
-  .v3-mob { display: block; }
-  .v3-mob-i { display: inline; }
-}
+.v3-desk, .v3-mob { display: block; }
+.v3-desk-i, .v3-mob-i { display: inline; }
+/* Hide rules are !important so a class (.v3-art) or an inline
+   display (VerifyTopBar, footer) can never leak the other layout. */
+@media (min-width: 768px) { .v3-mob, .v3-mob-i { display: none !important; } }
+@media (max-width: 767px) { .v3-desk, .v3-desk-i { display: none !important; } }
+
+/* V3 has no demo bars: hide the root layout's "Demo prototype" note
+   on V3 pages only (this stylesheet is only loaded under /v3). */
+body > div[role="note"] { display: none !important; }
+
+/* Experian logo = restart (clears V3 demo state, back to the homepage) */
+.v3-logo-btn { display: inline-flex; align-items: center; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; line-height: 0; }
+.v3-logo-btn:focus-visible { outline: 3px solid #3361A0; outline-offset: 3px; border-radius: 4px; }
 
 /* ── type ── */
 .v3-h1 { margin: 0; font-size: 34px; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; color: #1E1E35; }
@@ -77,9 +82,6 @@ export const V3_CSS = `
 .v3-foot-link:hover { color: #26478D; text-decoration: underline; }
 .v3-close { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 0; border-radius: 50%; background: #F1F1F5; color: #4D4D6A; cursor: pointer; }
 .v3-close:hover { background: #E4E4EC; }
-.v3-demobar { display: flex; align-items: center; justify-content: flex-end; gap: 14px; background: #2B2B45; color: #fff; padding: 4px 14px; }
-.v3-demobar button { background: none; border: 0; color: #fff; font: 600 11px/1.3 system-ui, sans-serif; cursor: pointer; opacity: .85; padding: 2px 4px; }
-.v3-demobar button:hover { opacity: 1; text-decoration: underline; }
 
 /* ── modal (D3/M3) ── */
 .v3-backdrop { position: fixed; inset: 0; z-index: 400; background: rgba(13,13,31,.55); display: flex; align-items: center; justify-content: center; padding: 24px; }

@@ -1,10 +1,9 @@
 import { V3_CSS } from './_components/styles'
-import { DemoBar } from './_components/DemoBar'
 
 /* ──────────────────────────────────────────────────────────────
-   V3 (Study 2) layout. Nests inside the root layout, so the
-   global "Demo prototype — user testing only" bar still sits on
-   top; this adds the V3 stylesheet and the ↺ Restart control.
+   V3 (Study 2) layout: adds the V3 stylesheet. No demo bars (the
+   stylesheet hides the root "Demo prototype" note on V3 pages);
+   the restart lives on the Experian logo (RestartLogo).
    ────────────────────────────────────────────────────────────── */
 
 export const metadata = {
@@ -16,7 +15,6 @@ export default function V3Layout({ children }) {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: V3_CSS }} />
-      <DemoBar />
       {children}
     </>
   )

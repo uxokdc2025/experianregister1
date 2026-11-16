@@ -44,13 +44,38 @@ export function writeState(patch) {
   return next
 }
 
+/* Wipes every piece of V3 demo state in this browser: all exp_v3*
+   keys in localStorage and sessionStorage, and any exp_v3* cookie.
+   (It can't remove a passkey from the device's password manager.) */
 export function clearState() {
   if (typeof window === 'undefined') return
+  for (const store of ['localStorage', 'sessionStorage']) {
+    try {
+      const s = window[store]
+      Object.keys(s)
+        .filter((k) => k.startsWith(STORAGE_KEY))
+        .forEach((k) => s.removeItem(k))
+    } catch {
+      /* private mode — ignore */
+    }
+  }
   try {
-    window.localStorage.removeItem(STORAGE_KEY)
+    document.cookie
+      .split(';')
+      .map((c) => c.split('=')[0].trim())
+      .filter((name) => name.startsWith(STORAGE_KEY))
+      .forEach((name) => {
+        document.cookie = `${name}=; Max-Age=0; path=/`
+      })
   } catch {
     /* ignore */
   }
+}
+
+/* Logo click: clear the demo and start over on the V3 homepage. */
+export function restartDemo() {
+  clearState()
+  window.location.assign('/v3')
 }
 
 /* Study events stay local; nothing is ever sent anywhere. */
