@@ -10,7 +10,7 @@
 import { useEffect } from 'react'
 import { PageShell } from '../../_components/Chrome'
 import { ShieldCheck, PhoneSignal } from '../../_components/Art'
-import { ACCOUNT_HREF, go } from '../../lib/routes'
+import { ACCOUNT_HREF, DASHBOARD_HREF, go } from '../../lib/routes'
 import { logEvent } from '../../lib/state'
 
 export default function PasskeyCreatedPage() {
@@ -38,6 +38,10 @@ export default function PasskeyCreatedPage() {
 
         <button type="button" className="v3-btn v3-btn-primary" style={{ marginTop: 26 }} onClick={() => go(ACCOUNT_HREF)}>
           Go to my account
+        </button>
+
+        <button type="button" className="v3-btn v3-btn-pink" style={{ marginTop: 12 }} onClick={() => go(DASHBOARD_HREF)}>
+          Continue to my dashboard
         </button>
 
         <div style={{ marginTop: 12 }}>

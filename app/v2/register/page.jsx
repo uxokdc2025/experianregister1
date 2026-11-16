@@ -610,7 +610,7 @@ function MoneyCard({ unlocked }) {
   )
 }
 
-function Dashboard({ unlocked, onGetStarted }) {
+export function Dashboard({ unlocked, onGetStarted }) {
   return (
     <div style={{ background: '#fff', minHeight: '100%' }}>
       <DashNav />

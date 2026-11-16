@@ -434,7 +434,7 @@ function DashCard({ children, pad = 20 }) {
   return <div style={{ border: '1px solid var(--color-neutral-200)', borderRadius: 14, padding: pad }}>{children}</div>
 }
 
-function MDash({ unlocked = true, showStatusBar = true }) {
+export function MDash({ unlocked = true, showStatusBar = true }) {
   const blur = unlocked ? 'none' : 'blur(8px)'
   const benefits = ['Credit monitoring', 'Credit report', 'Experian Boost®', 'Exact FICO® Score', 'Score history', 'Dark web scan']
   const progress = [['Account created', 'done'], ['Phone verified', 'done'], ['Confirm identity', unlocked ? 'done' : 'active'], ['Score & report revealed', unlocked ? 'done' : 'todo']]
@@ -551,7 +551,7 @@ function MobileSteps({ showStatusBar = true }) {
 }
 
 /* Full-viewport shell — fills a real device (no fake phone frame). */
-function MobileShell({ children }) {
+export function MobileShell({ children }) {
   return (
     <div style={{ minHeight: '100dvh', background: 'var(--color-neutral-100)', display: 'flex', justifyContent: 'center' }}>
       <main id="main-content" style={{ position: 'relative', width: '100%', maxWidth: 520, height: '100dvh', background: '#fff', overflow: 'hidden' }}>
