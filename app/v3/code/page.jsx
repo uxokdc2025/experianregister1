@@ -5,10 +5,9 @@
    D6 / M6 "Setting up your passkey…" state in place.
 
    Any 6 digits pass — there are no error states in this study.
-   On flow=create the Verify click starts passkey creation
-   SYNCHRONOUSLY (see app/v3/lib/passkey.js): card 2 swaps the
-   stub for navigator.credentials.create() and the user gesture
-   has to survive, so nothing may be awaited before that call.
+   On flow=create the Verify click calls navigator.credentials.create()
+   SYNCHRONOUSLY (app/v3/lib/passkey.js) so the user gesture survives;
+   nothing may be awaited before that call.
    ────────────────────────────────────────────────────────────── */
 
 import { useState, useEffect, useRef } from 'react'
@@ -16,16 +15,14 @@ import { VerifyTopBar, DesktopActionBar, ExperianHeader, ExperianFooter } from '
 import { Field } from '../_components/Form'
 import { SettingUp } from '../_components/SettingUp'
 import { PhoneSignal } from '../_components/Art'
-import { startPasskeyCreation } from '../lib/passkey'
+import { finishCreation, probePasskeySupport, startPasskeyCreation } from '../lib/passkey'
 import {
   ACCOUNT_HREF,
   CREATE_PASSKEY_HREF,
-  PASSKEY_CREATED_HREF,
-  PASSKEY_NOT_CREATED_HREF,
   SIGN_IN_HREF,
   go,
 } from '../lib/routes'
-import { DEFAULT_LAST4, deviceLabel, last4, logEvent, readState, writeState } from '../lib/state'
+import { DEFAULT_LAST4, last4, logEvent, readState, writeState } from '../lib/state'
 
 const FORM_ID = 'v3-code-form'
 
@@ -37,7 +34,6 @@ export default function CodePage() {
   const [resent, setResent] = useState(false)
   const [signinState, setSigninState] = useState('idle') // 'idle' | 'loading' | 'done'
   const signinTimers = useRef([])
-  const stubFail = useRef(false)
   const resentTimer = useRef(null)
 
   useEffect(() => {
@@ -46,8 +42,8 @@ export default function CodePage() {
     const fromUrl = params.get('flow')
     setFlow(fromUrl === 'signin' || fromUrl === 'create' ? fromUrl : saved.flow || 'create')
     setTail(last4(saved.phone))
-    /* dev-only: ?stub=fail drives the D8/M8 screen until card 2 lands */
-    stubFail.current = params.get('stub') === 'fail'
+    /* probe on load so the Verify click awaits nothing before create() */
+    probePasskeySupport()
     return () => {
       clearTimeout(resentTimer.current)
       signinTimers.current.forEach(clearTimeout)
@@ -77,24 +73,11 @@ export default function CodePage() {
       return
     }
 
-    /* First statement, no await before it — card 2 depends on this. */
-    const creation = startPasskeyCreation({ fail: stubFail.current })
+    /* First statement, no await before it — keeps the user gesture (Safari/iOS). */
+    const creation = startPasskeyCreation()
     setPhase('setting-up')
     logEvent('passkey_creation_started')
-
-    creation.then((result) => {
-      if (result.ok) {
-        const now = new Date().toISOString()
-        writeState({
-          passkey: { id: result.id, name: deviceLabel(), createdAt: now, lastUsed: now, mode: result.mode },
-        })
-        logEvent('passkey_created', result.mode)
-        go(PASSKEY_CREATED_HREF)
-      } else {
-        logEvent('passkey_not_created', result.reason)
-        go(PASSKEY_NOT_CREATED_HREF)
-      }
-    })
+    creation.then((result) => finishCreation(result))
   }
 
   const onResend = () => {

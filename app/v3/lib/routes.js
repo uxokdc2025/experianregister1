@@ -14,6 +14,8 @@ export const VERIFY_HREF = '/v3/verify'
 export const CODE_HREF = '/v3/code'
 export const PASSKEY_CREATED_HREF = '/v3/passkey/created'
 export const PASSKEY_NOT_CREATED_HREF = '/v3/passkey/not-created'
+export const PASSKEY_EXISTS_HREF = '/v3/passkey/exists'
+export const PASSKEY_UNSUPPORTED_HREF = '/v3/passkey/unsupported'
 export const ACCOUNT_HREF = '/v3/account'
 
 /* Plain assignment keeps these prototype hops simple and lets a

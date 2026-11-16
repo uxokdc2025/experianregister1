@@ -2,11 +2,12 @@
 
 import { PageShell } from './Chrome'
 import { ShieldCheck, PhoneSignal } from './Art'
+import { SimPrompt } from './SimPrompt'
 
 /* ──────────────────────────────────────────────────────────────
    D6 / M6 — "Setting up your passkey…". Rendered in place while
    passkey creation is pending, with no CTA: the browser/OS sheet
-   (card 2) appears on top of this. The spinner is suppressed
+   appears on top of this (or the in-page Demo prompt). The spinner is suppressed
    under prefers-reduced-motion.
    ────────────────────────────────────────────────────────────── */
 
@@ -32,6 +33,8 @@ export function SettingUp() {
           <span className="v3-spin" aria-hidden="true" />
         </div>
       </div>
+      {/* the real browser/OS sheet appears on top of this; the Demo prompt only on unsupported devices */}
+      <SimPrompt />
     </PageShell>
   )
 }

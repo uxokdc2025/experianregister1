@@ -9,45 +9,30 @@
 
    "Try again" re-runs creation straight from this click handler,
    the same way the Verify button does, and shows the D6/M6 state
-   while it is pending. Add ?stub=fail to make it fail again.
+   while it is pending. Cancelling again just returns here.
    ────────────────────────────────────────────────────────────── */
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { PageShell } from '../../_components/Chrome'
 import { SettingUp } from '../../_components/SettingUp'
 import { NeutralKey } from '../../_components/Art'
-import { startPasskeyCreation } from '../../lib/passkey'
-import { PASSKEY_CREATED_HREF, VERIFY_HREF, go } from '../../lib/routes'
-import { deviceLabel, logEvent, writeState } from '../../lib/state'
+import { finishCreation, probePasskeySupport, startPasskeyCreation } from '../../lib/passkey'
+import { VERIFY_HREF, go } from '../../lib/routes'
+import { logEvent, writeState } from '../../lib/state'
 
 export default function PasskeyNotCreatedPage() {
   const [busy, setBusy] = useState(false)
-  const stubFail = useRef(false)
-
   useEffect(() => {
-    stubFail.current = new URLSearchParams(window.location.search).get('stub') === 'fail'
+    probePasskeySupport()
     logEvent('passkey_not_created_screen_shown')
   }, [])
 
   const onTryAgain = () => {
-    /* First statement, no await before it — card 2 depends on this. */
-    const creation = startPasskeyCreation({ fail: stubFail.current })
+    /* First statement, no await before it — re-opens the real prompt in this click. */
+    const creation = startPasskeyCreation()
     setBusy(true)
     logEvent('passkey_creation_retried')
-
-    creation.then((result) => {
-      if (result.ok) {
-        const now = new Date().toISOString()
-        writeState({
-          passkey: { id: result.id, name: deviceLabel(), createdAt: now, lastUsed: now, mode: result.mode },
-        })
-        logEvent('passkey_created', result.mode)
-        go(PASSKEY_CREATED_HREF)
-      } else {
-        logEvent('passkey_not_created', result.reason)
-        setBusy(false)
-      }
-    })
+    creation.then((result) => finishCreation(result, { onStay: () => setBusy(false) }))
   }
 
   if (busy) return <SettingUp />

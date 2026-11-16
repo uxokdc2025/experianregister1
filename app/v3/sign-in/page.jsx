@@ -12,11 +12,19 @@
    the fictional persona's number (ends 4567, like the code screen).
    ────────────────────────────────────────────────────────────── */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { ExperianHeader, ExperianFooter } from '../_components/Chrome'
 import { Field } from '../_components/Form'
 import { AppQrPhone } from '../_components/Art'
-import { CREATE_PASSKEY_HREF, VERIFY_HREF, go } from '../lib/routes'
+import { SimPrompt } from '../_components/SimPrompt'
+import { ACCOUNT_HREF, CREATE_PASSKEY_HREF, VERIFY_HREF, go } from '../lib/routes'
+import {
+  abortConditional,
+  probePasskeySupport,
+  recordPasskeySignIn,
+  startConditionalSignIn,
+  startPasskeySignIn,
+} from '../lib/passkey'
 import { PERSONA, digitsOnly, formatPhone, logEvent, readState, writeState } from '../lib/state'
 
 /* Visible, deliberately inert controls (out of scope for Study 2). */
@@ -35,23 +43,67 @@ function GoogleG() {
 
 export default function SignInPage() {
   const [login, setLogin] = useState(PERSONA.phone)
+  const [hasPasskey, setHasPasskey] = useState(false)
+  // passkey sign-in CTA: idle → waiting (OS prompt open) → loading (spinner) → done (check)
+  const [pkState, setPkState] = useState('idle')
+  const timers = useRef([])
+
+  /* Passkey accepted: spinner in the CTA (~1.2s), check (~0.8s), then the account page. */
+  const succeed = (result) => {
+    recordPasskeySignIn(result)
+    setPkState('loading')
+    timers.current.push(
+      setTimeout(() => setPkState('done'), 1200),
+      setTimeout(() => go(ACCOUNT_HREF), 2000),
+    )
+  }
 
   useEffect(() => {
-    const saved = readState().phone
-    if (saved) setLogin(formatPhone(saved))
+    const s = readState()
+    if (s.phone) setLogin(formatPhone(s.phone))
+    setHasPasskey(Boolean(s.passkey))
+    let alive = true
+    /* Autofill: the browser offers a saved passkey from the input (autocomplete="username webauthn"). */
+    probePasskeySupport().then(() => {
+      const p = alive ? startConditionalSignIn() : null
+      if (p) p.then((r) => { if (alive && r && r.ok) succeed(r) })
+    })
+    return () => {
+      alive = false
+      abortConditional()
+      timers.current.forEach(clearTimeout)
+    }
   }, [])
+
+  const onPasskeySignIn = () => {
+    if (pkState !== 'idle') return
+    /* First statement, no await before it — keeps the user gesture. */
+    const attempt = startPasskeySignIn()
+    setPkState('waiting')
+    logEvent('passkey_sign_in_started')
+    attempt.then((r) => {
+      if (r.ok) succeed(r)
+      else {
+        // cancel / NotAllowed: stay here, no error — the phone path is still there
+        logEvent('passkey_sign_in_cancelled', r.reason)
+        setPkState('idle')
+      }
+    })
+  }
 
   /* Only a 10-digit entry is kept as the phone the later screens mask;
      anything else (username / email) falls back to the persona's 4567. */
   const remember = (flow) => writeState({ phone: digitsOnly(login).length === 10 ? login : PERSONA.phone, flow })
 
   const onSignIn = () => {
+    abortConditional()
     remember('signin')
     logEvent('signin_phone_submitted')
     go(`${VERIFY_HREF}?flow=signin`)
   }
 
   const onCreatePasskey = () => {
+    abortConditional()
     remember('create')
     logEvent('create_passkey_chosen', 'sign-in')
     go(CREATE_PASSKEY_HREF)
@@ -83,7 +135,7 @@ export default function SignInPage() {
                     label="Enter phone, username or email"
                     name="username"
                     type="text"
-                    autoComplete="username"
+                    autoComplete="username webauthn"
                     value={login}
                     onChange={setLogin}
                   />
@@ -101,9 +153,31 @@ export default function SignInPage() {
 
                 <div className="v3-divider">or</div>
 
-                <button type="button" className="v3-btn v3-btn-pink" onClick={onCreatePasskey}>
-                  Create a passkey
-                </button>
+                {/* Returning tester with a saved passkey: offer it here instead of creating another */}
+                {hasPasskey ? (
+                  <button
+                    type="button"
+                    className={`v3-btn ${pkState === 'loading' || pkState === 'done' ? 'v3-btn-primary v3-btn-busy' : 'v3-btn-pink'}`}
+                    onClick={onPasskeySignIn}
+                    aria-busy={pkState === 'waiting' || pkState === 'loading'}
+                  >
+                    {pkState === 'loading' ? (
+                      <span className="v3-btn-spin" role="status" aria-label="Signing in" />
+                    ) : pkState === 'done' ? (
+                      <span className="v3-btn-check" role="status" aria-label="Signed in">
+                        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none">
+                          <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </span>
+                    ) : (
+                      'Sign in with a passkey'
+                    )}
+                  </button>
+                ) : (
+                  <button type="button" className="v3-btn v3-btn-pink" onClick={onCreatePasskey}>
+                    Create a passkey
+                  </button>
+                )}
 
                 <button type="button" className="v3-google" onClick={noop}>
                   <span className="v3-google-g"><GoogleG /></span>
@@ -142,6 +216,7 @@ export default function SignInPage() {
       </main>
 
       <ExperianFooter />
+      <SimPrompt />
     </div>
   )
 }
