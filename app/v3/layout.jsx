@@ -10,10 +10,9 @@ import { V3_CSS } from './_components/styles'
 /* Head metadata for every /v3 route. Visible on-page Experian mockup
    branding is unchanged. WebAuthn rp.name is not set here. */
 export const metadata = {
-  title: {
-    default: 'Usertesting Passkey',
-    template: '%s · Usertesting Passkey',
-  },
+  /* Title comes from the root layout (default "Usertesting Passkey",
+     template "%s · Usertesting Passkey") so we do not set a default
+     here — that would render as "Usertesting Passkey · Usertesting Passkey". */
   description: 'A UX research prototype for passkey sign-in usability testing.',
   applicationName: 'Usertesting Passkey',
   appleWebApp: { title: 'Usertesting Passkey' },
