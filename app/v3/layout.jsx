@@ -7,8 +7,16 @@ import { V3_CSS } from './_components/styles'
    homepage (next to Global Sites) wipes this browser's demo data.
    ────────────────────────────────────────────────────────────── */
 
+/* Head metadata for every /v3 route. Visible on-page Experian mockup
+   branding is unchanged. WebAuthn rp.name is not set here. */
 export const metadata = {
-  title: 'Passkey prototype',
+  title: {
+    default: 'Usertesting Passkey',
+    template: '%s · Usertesting Passkey',
+  },
+  description: 'A UX research prototype for passkey sign-in usability testing.',
+  applicationName: 'Usertesting Passkey',
+  appleWebApp: { title: 'Usertesting Passkey' },
   robots: { index: false, follow: false },
 }
 

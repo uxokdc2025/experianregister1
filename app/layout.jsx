@@ -1,27 +1,36 @@
 import './globals.css'
 
-const SITE_NAME = 'Experian Registration Prototype'
-const SITE_DESCRIPTION =
-  'A UX research prototype exploring a re-imagined Experian sign-up experience. Two design iterations run side-by-side for usability testing.'
-const SITE_URL = 'https://usertestingdemo.vercel.app'
+/* SITE_MODE=v3 (usertest-passkey only): head metadata uses "Usertesting
+   Passkey" and must not mention Experian. The gated usertestingdemo site
+   keeps the original metadata below when the switch is unset. */
+const IS_V3 = process.env.SITE_MODE === 'v3'
+const SITE_NAME = IS_V3 ? 'Usertesting Passkey' : 'Experian Registration Prototype'
+const SITE_DESCRIPTION = IS_V3
+  ? 'A UX research prototype for passkey sign-in usability testing.'
+  : 'A UX research prototype exploring a re-imagined Experian sign-up experience. Two design iterations run side-by-side for usability testing.'
+const SITE_URL = IS_V3 ? 'https://usertest-passkey.vercel.app' : 'https://usertestingdemo.vercel.app'
+const SITE_TITLE = IS_V3 ? SITE_NAME : `${SITE_NAME} — Usability Test`
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} — Usability Test`,
+    default: SITE_TITLE,
     template: `%s · ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
-  keywords: [
-    'UX prototype',
-    'usability testing',
-    'registration flow',
-    'sign-up UX',
-    'credit score UX',
-    'accessible form design',
-    'Experian prototype',
-  ],
+  ...(IS_V3 ? { appleWebApp: { title: SITE_NAME } } : {}),
+  keywords: IS_V3
+    ? ['UX prototype', 'usability testing', 'passkey', 'sign-in UX']
+    : [
+        'UX prototype',
+        'usability testing',
+        'registration flow',
+        'sign-up UX',
+        'credit score UX',
+        'accessible form design',
+        'Experian prototype',
+      ],
   authors: [{ name: 'UX Research' }],
   creator: 'UX Research',
   publisher: 'UX Research',
@@ -35,13 +44,13 @@ export const metadata = {
     type: 'website',
     url: '/',
     siteName: SITE_NAME,
-    title: `${SITE_NAME} — Usability Test`,
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     locale: 'en_US',
   },
   twitter: {
     card: 'summary',
-    title: `${SITE_NAME} — Usability Test`,
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
   },
   icons: {
