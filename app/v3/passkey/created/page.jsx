@@ -43,12 +43,6 @@ export default function PasskeyCreatedPage() {
         <button type="button" className="v3-btn v3-btn-pink" style={{ marginTop: 12 }} onClick={() => go(DASHBOARD_HREF)}>
           Continue to my dashboard
         </button>
-
-        <div style={{ marginTop: 12 }}>
-          <button type="button" className="v3-linkbtn" onClick={() => go(`${ACCOUNT_HREF}#passkeys`)}>
-            Manage passkeys
-          </button>
-        </div>
       </div>
     </PageShell>
   )
