@@ -434,7 +434,8 @@ function DashCard({ children, pad = 20 }) {
   return <div style={{ border: '1px solid var(--color-neutral-200)', borderRadius: 14, padding: pad }}>{children}</div>
 }
 
-export function MDash({ unlocked = true, showStatusBar = true }) {
+/* headerRight: optional, additive (V3 profile menu). V2 never passes it. */
+export function MDash({ unlocked = true, showStatusBar = true, headerRight = null }) {
   const blur = unlocked ? 'none' : 'blur(8px)'
   const benefits = ['Credit monitoring', 'Credit report', 'Experian Boost®', 'Exact FICO® Score', 'Score history', 'Dark web scan']
   const progress = [['Account created', 'done'], ['Phone verified', 'done'], ['Confirm identity', unlocked ? 'done' : 'active'], ['Score & report revealed', unlocked ? 'done' : 'todo']]
@@ -443,7 +444,7 @@ export function MDash({ unlocked = true, showStatusBar = true }) {
       {showStatusBar && <StatusBar />}
       {!showStatusBar && <div style={{ height: 14 }} />}
       <div style={{ padding: '0 20px 40px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 8 }}><MLogo size={26} /></div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 8 }}><MLogo size={26} />{headerRight}</div>
         <h1 className="intro-rise" style={{ fontSize: 26, fontWeight: 800, color: 'var(--color-neutral-900)', marginTop: 8 }}>{unlocked ? 'Hi, David !' : 'Hi, Good Morning !'}</h1>
         <p className="intro-rise" style={{ animationDelay: '.05s', fontSize: 14.5, color: 'var(--color-neutral-500)', marginTop: 4 }}>Take a look at the big picture of your credit.</p>
 

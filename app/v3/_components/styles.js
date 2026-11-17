@@ -256,4 +256,31 @@ body > div[role="note"] { display: none !important; }
   .v3-createpk-title h1 { font-size: 32px; }
   .v3-createpk-actions, .v3-createpk-body { max-width: none; }
 }
+
+/* ── Nov 17: disabled typed sign-in controls (Study 2 is passkey-only) ── */
+.v3-forgot .v3-linkbtn.v3-linkbtn-off, .v3-linkbtn.v3-linkbtn-off { color: #A3A3B8; cursor: not-allowed; text-decoration: none; }
+.v3-linkbtn.v3-linkbtn-off:hover { text-decoration: none; }
+.v3-google.v3-google-off { background: #C9CCD6; color: #fff; cursor: not-allowed; }
+.v3-google.v3-google-off .v3-google-g { opacity: .55; }
+
+/* ── Nov 17: account → dashboard link ── */
+.v3-acct-back { display: inline-flex; align-items: center; gap: 6px; background: none; border: 0; padding: 4px 0; margin-bottom: 14px; font: inherit; font-size: 14px; font-weight: 600; color: #26478D; cursor: pointer; text-decoration: none; }
+.v3-acct-back:hover { text-decoration: underline; }
+.v3-acct-back:focus-visible, .v3-acct-nav:focus-visible { outline: 3px solid #3361A0; outline-offset: 2px; border-radius: 4px; }
+a.v3-acct-nav[href] { text-decoration: none; }
+
+/* ── Nov 17: V3 dashboard profile menu ── */
+.v3-pm { position: relative; display: inline-flex; }
+.v3-pm-btn { display: inline-flex; align-items: center; justify-content: center; gap: 4px; width: auto; height: 40px; padding: 0 6px; background: none; border: 0; border-radius: 999px; color: #1E1E35; cursor: pointer; font: inherit; }
+.v3-pm-btn:hover { background: #F5F5F8; }
+.v3-pm-btn:focus-visible { outline: 3px solid #3361A0; outline-offset: 2px; }
+.v3-pm-avatar { width: 32px; height: 32px; border-radius: 50%; background: #FBE8F2; color: #BA2F7D; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+.v3-pm-menu { position: absolute; right: 0; top: calc(100% + 8px); min-width: 230px; background: #fff; border: 1px solid #DCDCE4; border-radius: 10px; box-shadow: 0 8px 28px rgba(13,13,31,.16); padding: 6px; z-index: 100; text-align: left; }
+.v3-pm-head { padding: 10px 12px 10px; border-bottom: 1px solid #EAEAEF; margin-bottom: 4px; }
+.v3-pm-name { font-size: 14.5px; font-weight: 700; color: #1E1E35; }
+.v3-pm-sub { font-size: 12.5px; color: #6B6B88; margin-top: 2px; }
+.v3-pm-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px 12px; background: none; border: 0; border-radius: 6px; font: inherit; font-size: 14.5px; color: #1E1E35; cursor: pointer; text-align: left; text-decoration: none; }
+.v3-pm-item:hover, .v3-pm-item:focus-visible { background: #FBE8F2; color: #BA2F7D; outline: none; }
+.v3-pm-sep { height: 1px; background: #EAEAEF; margin: 4px 0; }
+@media (max-width: 767px) { .v3-pm-menu { min-width: 220px; max-width: calc(100vw - 32px); } .v3-pm-item { min-height: 44px; } }
 `

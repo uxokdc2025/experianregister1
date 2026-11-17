@@ -8,11 +8,14 @@
    step "dash"). V2 files are unchanged except for additive
    exports. Fake data only. The V2 logos already go to / without
    clearing state, which is what V3 wants.
+   Nov 17 2026: V3 passes a profile menu (headerRight) with
+   Manage passkeys; V2 routes don't pass it, so they're unchanged.
    ────────────────────────────────────────────────────────────── */
 
 import { useState, useEffect } from 'react'
 import { Dashboard } from '../../v2/register/page'
 import { MDash, MobileShell } from '../../v2/mobile/page'
+import { ProfileMenu } from '../_components/ProfileMenu'
 
 const MOBILE_MAX = 767
 
@@ -32,14 +35,14 @@ export default function V3DashboardPage() {
   if (mode === 'mobile') {
     return (
       <MobileShell>
-        <MDash unlocked showStatusBar={false} />
+        <MDash unlocked showStatusBar={false} headerRight={<ProfileMenu />} />
       </MobileShell>
     )
   }
 
   return (
     <main id="main-content" style={{ minHeight: '100vh', background: '#fff' }}>
-      <Dashboard unlocked onGetStarted={() => {}} />
+      <Dashboard unlocked onGetStarted={() => {}} headerRight={<ProfileMenu />} />
     </main>
   )
 }

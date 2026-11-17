@@ -18,7 +18,7 @@ import { Modal } from '../_components/Modal'
 import { SettingUp } from '../_components/SettingUp'
 import { ShieldCheck } from '../_components/Art'
 import { finishCreation, probePasskeySupport, signalRemoved, startPasskeyCreation } from '../lib/passkey'
-import { DONE_HREF, go } from '../lib/routes'
+import { DASHBOARD_HREF, DONE_HREF, go } from '../lib/routes'
 import { PERSONA, formatDate, logEvent, readState, writeState } from '../lib/state'
 
 const NAV = ['Credit', 'Money', 'Identity', 'Credit Cards', 'Loans', 'Auto & Insurance']
@@ -56,6 +56,8 @@ function SignedInHeader() {
         <div className="v3-acct-wrap" style={{ display: 'flex', alignItems: 'center', gap: 30, height: 74 }}>
           <RestartLogo height={34} />
           <nav aria-label="Experian" style={{ display: 'flex', gap: 30, flex: 1 }}>
+            {/* Nov 17: a real way back to the dashboard (the other items stay decorative) */}
+            <a href={DASHBOARD_HREF} className="v3-acct-nav">Dashboard</a>
             {NAV.map((n) => (
               <a key={n} className="v3-acct-nav">{n}</a>
             ))}
@@ -232,6 +234,10 @@ export default function AccountPage() {
 
       <main id="main-content" className="v3-main">
         <div className="v3-acct-wrap" style={{ paddingTop: 26, paddingBottom: 56 }}>
+          <a href={DASHBOARD_HREF} className="v3-acct-back">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+            Back to dashboard
+          </a>
           <h1 className="v3-acct-h1">Your account</h1>
           <p className="v3-acct-sub">Manage your account info, settings and membership details.</p>
 

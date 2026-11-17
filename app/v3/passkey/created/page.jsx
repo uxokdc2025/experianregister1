@@ -36,12 +36,13 @@ export default function PasskeyCreatedPage() {
           You can rename or remove it anytime in your account settings.
         </p>
 
-        <button type="button" className="v3-btn v3-btn-primary" style={{ marginTop: 26 }} onClick={() => go(ACCOUNT_HREF)}>
-          Go to my account
+        {/* Nov 17 (Jose, OK'd by David): dashboard is the main action, account is secondary */}
+        <button type="button" className="v3-btn v3-btn-primary" style={{ marginTop: 26 }} onClick={() => go(DASHBOARD_HREF)}>
+          Continue to my dashboard
         </button>
 
-        <button type="button" className="v3-btn v3-btn-pink" style={{ marginTop: 12 }} onClick={() => go(DASHBOARD_HREF)}>
-          Continue to my dashboard
+        <button type="button" className="v3-btn v3-btn-pink" style={{ marginTop: 12 }} onClick={() => go(ACCOUNT_HREF)}>
+          Go to my account
         </button>
       </div>
     </PageShell>

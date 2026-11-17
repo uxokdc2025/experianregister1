@@ -414,7 +414,7 @@ function AuthPasskey({ onNext }) {
 }
 
 /* ─────────────── Dashboard ─────────────── */
-function DashNav() {
+function DashNav({ headerRight = null }) {
   const items = ['Dashboard', 'My Score', 'Credit Report', 'Protect', 'Offers']
   return (
     <header style={{ background: '#fff', borderBottom: '1px solid var(--color-neutral-100)', position: 'sticky', top: 0, zIndex: 50 }}>
@@ -434,6 +434,7 @@ function DashNav() {
             <span style={{ position: 'absolute', top: -6, right: -7, background: PINK, color: '#fff', fontSize: 10, fontWeight: 700, width: 17, height: 17, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>5</span>
           </div>
           <RIco.menu style={{ color: 'var(--color-blue-600)' }} />
+          {headerRight}
         </div>
       </div>
     </header>
@@ -610,10 +611,11 @@ function MoneyCard({ unlocked }) {
   )
 }
 
-export function Dashboard({ unlocked, onGetStarted }) {
+/* headerRight: optional, additive (V3 profile menu). V2 never passes it. */
+export function Dashboard({ unlocked, onGetStarted, headerRight = null }) {
   return (
     <div style={{ background: '#fff', minHeight: '100%' }}>
-      <DashNav />
+      <DashNav headerRight={headerRight} />
       <div className={`dash-content${unlocked ? '' : ' dash-locked'}`} onClickCapture={unlocked ? undefined : (e) => { if (e.target.closest('[data-lock]')) onGetStarted() }} style={{ maxWidth: 1320, margin: '0 auto', padding: '44px 40px 80px' }}>
         <h1 style={{ fontSize: 36, fontWeight: 800, color: 'var(--color-neutral-900)', letterSpacing: '-.01em', filter: unlocked ? 'none' : 'blur(9px)', userSelect: unlocked ? 'auto' : 'none' }} aria-hidden={!unlocked}>Hi, Good Morning{unlocked ? ', David' : ''}!</h1>
         <p style={{ fontSize: 16, color: 'var(--color-neutral-500)', marginTop: 6, filter: unlocked ? 'none' : 'blur(9px)', userSelect: unlocked ? 'auto' : 'none' }} aria-hidden={!unlocked}>Take a look at the big picture of your credit.</p>
