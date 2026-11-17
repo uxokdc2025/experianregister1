@@ -1,21 +1,28 @@
-/* Neutral password page — no Experian branding, safe for crawlers to see. */
+/* Neutral password page — no Experian branding, safe for crawlers to see.
+   Visible copy stays "Demo access". When SITE_MODE=v3 the document title
+   and other head metadata use "Usertesting Passkey" (no Experian). */
+
+const IS_V3 = process.env.SITE_MODE === 'v3'
+const GATE_TITLE = IS_V3 ? 'Usertesting Passkey' : 'Demo access'
+const GATE_DESC = 'Password-protected prototype for user testing.'
+const DEFAULT_NEXT = IS_V3 ? '/' : '/start'
 
 export const metadata = {
-  title: { absolute: 'Demo access' },
-  description: 'Password-protected prototype for user testing.',
-  applicationName: 'Demo access',
+  title: { absolute: GATE_TITLE },
+  description: GATE_DESC,
+  applicationName: GATE_TITLE,
   keywords: [],
   authors: [],
   creator: undefined,
   publisher: undefined,
-  openGraph: { title: 'Demo access', description: 'Password-protected prototype for user testing.', images: [] },
-  twitter: { title: 'Demo access', description: 'Password-protected prototype for user testing.' },
+  openGraph: { title: GATE_TITLE, description: GATE_DESC, images: [] },
+  twitter: { title: GATE_TITLE, description: GATE_DESC },
   robots: { index: false, follow: false },
 }
 
 export default async function GatePage({ searchParams }) {
   const sp = (await searchParams) || {}
-  const next = typeof sp.next === 'string' && sp.next.startsWith('/') ? sp.next : '/start'
+  const next = typeof sp.next === 'string' && sp.next.startsWith('/') && !sp.next.startsWith('//') ? sp.next : DEFAULT_NEXT
   const error = sp.error === '1'
 
   return (

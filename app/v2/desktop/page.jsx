@@ -35,7 +35,7 @@ const Social = {
 function Logo({ size = 26 }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', lineHeight: 0 }}>
-      <img src="/uploads/Experian.png" alt="Experian" style={{ display: 'block', height: size * 1.2, width: 'auto' }} />
+      <img src="/uploads/brand-logo.png" alt="Experian" style={{ display: 'block', height: size * 1.2, width: 'auto' }} />
     </div>
   )
 }

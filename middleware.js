@@ -11,16 +11,53 @@ import { NextResponse } from 'next/server'
 const COOKIE = 'demo_gate'
 const TOKEN = process.env.DEMO_TOKEN || 'granted-2026'
 
+/* V3-only site mode (SITE_MODE=v3, set only on the usertest-passkey
+   Vercel project). "/" serves the V3 homepage; everything outside
+   /v3 (and the /uploads assets V3 uses) goes back to "/", so V1/V2
+   and the earlier study can't be reached from that site.
+   When SITE_GATE=on, the same cookie gate as usertestingdemo is
+   enforced first (/gate and /api/gate stay reachable). After login,
+   testers land on / (V3 home) or the /v3 path they originally asked
+   for. When SITE_MODE is unset this branch never runs. */
+const V3_ONLY = process.env.SITE_MODE === 'v3'
+const V3_GATE = V3_ONLY && process.env.SITE_GATE === 'on'
+
+function isAuthed(req) {
+  return req.cookies.get(COOKIE)?.value === TOKEN
+}
+
+function redirectToGate(req) {
+  const url = req.nextUrl.clone()
+  const next = url.pathname + (url.search || '')
+  url.pathname = '/gate'
+  url.search = `?next=${encodeURIComponent(next)}`
+  return NextResponse.redirect(url)
+}
+
+function v3OnlySite(req) {
+  const { pathname } = req.nextUrl
+  if (pathname === '/') return NextResponse.rewrite(new URL('/v3', req.url))
+  // /v3 itself (logo restart, account "home" button) shows as the clean "/".
+  if (pathname === '/v3') return NextResponse.redirect(new URL('/', req.url))
+  if (pathname.startsWith('/v3/') || pathname.startsWith('/uploads/')) {
+    return NextResponse.next()
+  }
+  return NextResponse.redirect(new URL('/', req.url))
+}
+
 export const config = {
   // Gate everything except the gate page, its API, and static assets.
   matcher: ['/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|gate|api/gate).*)'],
 }
 
 export function middleware(req) {
-  if (req.cookies.get(COOKIE)?.value === TOKEN) return NextResponse.next()
-  const url = req.nextUrl.clone()
-  const next = url.pathname + (url.search || '')
-  url.pathname = '/gate'
-  url.search = `?next=${encodeURIComponent(next)}`
-  return NextResponse.redirect(url)
+  if (V3_ONLY) {
+    const { pathname } = req.nextUrl
+    // Logo and other uploads must load on /gate without a cookie.
+    if (pathname.startsWith('/uploads/')) return NextResponse.next()
+    if (V3_GATE && !isAuthed(req)) return redirectToGate(req)
+    return v3OnlySite(req)
+  }
+  if (isAuthed(req)) return NextResponse.next()
+  return redirectToGate(req)
 }

@@ -1,4 +1,4 @@
-const BASE = 'https://usertestingdemo.vercel.app'
+const BASE = process.env.SITE_MODE === 'v3' ? 'https://usertest-passkey.vercel.app' : 'https://usertestingdemo.vercel.app'
 
 export default function sitemap() {
   const routes = [
