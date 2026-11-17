@@ -257,12 +257,6 @@ body > div[role="note"] { display: none !important; }
   .v3-createpk-actions, .v3-createpk-body { max-width: none; }
 }
 
-/* ── Nov 17: disabled typed sign-in controls (Study 2 is passkey-only) ── */
-.v3-forgot .v3-linkbtn.v3-linkbtn-off, .v3-linkbtn.v3-linkbtn-off { color: #A3A3B8; cursor: not-allowed; text-decoration: none; }
-.v3-linkbtn.v3-linkbtn-off:hover { text-decoration: none; }
-.v3-google.v3-google-off { background: #C9CCD6; color: #fff; cursor: not-allowed; }
-.v3-google.v3-google-off .v3-google-g { opacity: .55; }
-
 /* ── Nov 17: account → dashboard link ── */
 .v3-acct-back { display: inline-flex; align-items: center; gap: 6px; background: none; border: 0; padding: 4px 0; margin-bottom: 14px; font: inherit; font-size: 14px; font-weight: 600; color: #26478D; cursor: pointer; text-decoration: none; }
 .v3-acct-back:hover { text-decoration: underline; }

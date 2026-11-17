@@ -7,13 +7,16 @@
    Forgot username? / Forgot password?, "or", Create a passkey,
    Sign in with Google, the Google email note, and the app panel.
    Study 2 tests passkeys only. Nov 17 2026 (Jose's review, OK'd by
-   David): Sign In, Sign in with Google and the Forgot username? /
-   Forgot password? links are visibly disabled (disabled +
-   aria-disabled, no navigation, no popup). The field stays typable
-   so browser passkey autofill (autocomplete="username webauthn")
-   still works, but Enter submits nothing. The passkey routes are
-   unchanged: Sign in with a passkey, the auto prompt when a passkey
-   is stored, and Create a passkey (its own phone + code steps).
+   David; then David: "don't grey out anything, keep it as natural
+   and close to the real experience"): Sign In, Sign in with Google
+   and the Forgot username? / Forgot password? links look and hover
+   exactly as before but do nothing — no navigation, no error, no
+   visible change. Each attempt quietly logs signin_disabled_attempt
+   with the control (sign_in_button / enter_key / forgot_username /
+   forgot_password / google) for findings. The field stays typable
+   so passkey autofill (autocomplete="username webauthn") works.
+   The passkey routes are unchanged: Sign in with a passkey, the
+   auto prompt when a passkey is stored, and Create a passkey.
    ────────────────────────────────────────────────────────────── */
 
 import { useState, useEffect, useRef } from 'react'
@@ -31,8 +34,12 @@ import {
 } from '../lib/passkey'
 import { PERSONA, digitsOnly, logEvent, readState, writeState } from '../lib/state'
 
-/* Visible, deliberately inert controls (out of scope for Study 2). */
-const noop = (e) => e.preventDefault()
+/* Visible, deliberately inert controls (out of scope for Study 2):
+   they look and feel real, do nothing, and quietly log the attempt. */
+const inert = (control) => (e) => {
+  e.preventDefault()
+  logEvent('signin_disabled_attempt', control)
+}
 
 function GoogleG() {
   return (
@@ -127,9 +134,16 @@ export default function SignInPage() {
     writeState({ phone: typed || (flow === "signin" ? PERSONA.phone : ""), flow })
   }
 
-  /* Typed sign-in is out of scope (Nov 17): Enter / Go and the disabled
-     Sign In button submit nothing. */
-  const onSignInBlocked = () => logEvent('signin_disabled_attempt')
+  /* Typed sign-in is out of scope (Nov 17): the Sign In button and
+     Enter / Go submit nothing. Implicit (Enter) submission reports the
+     button as submitter, so a keydown flag tells the two apart. */
+  const enterRef = useRef(false)
+  const onFormKeyDown = (e) => { if (e.key === 'Enter') enterRef.current = true }
+  const onSignInAttempt = (e) => {
+    e.preventDefault()
+    logEvent('signin_disabled_attempt', enterRef.current ? 'enter_key' : 'sign_in_button')
+    enterRef.current = false
+  }
 
   const onCreatePasskey = () => {
     abortConditional()
@@ -161,7 +175,7 @@ export default function SignInPage() {
             <div className="v3-signin-grid">
               <div>
                 {/* one field, so Enter — and the phone keyboard's Go key — signs in */}
-                <form onSubmit={(e) => { e.preventDefault(); onSignInBlocked() }}>
+                <form onSubmit={onSignInAttempt} onKeyDown={onFormKeyDown}>
                   <Field
                     label="Enter phone, username or email"
                     name="username"
@@ -172,13 +186,11 @@ export default function SignInPage() {
                   />
 
                   {/* autofill (conditional) passkey sign-in with no listed passkey animates this CTA */}
-                  {/* disabled (Nov 17) except while it animates an autofill passkey sign-in */}
+                  {/* looks real, submits nothing (Nov 17); still animates an autofill passkey sign-in */}
                   <button
                     type="submit"
                     className={`v3-btn v3-btn-primary${autofillBusy ? ' v3-btn-busy' : ''}`}
                     style={{ marginTop: 16 }}
-                    disabled={!autofillBusy}
-                    aria-disabled={!autofillBusy}
                   >
                     {!hasPasskey && pkState === 'loading' ? (
                       <span className="v3-btn-spin" role="status" aria-label="Signing in" />
@@ -198,8 +210,8 @@ export default function SignInPage() {
                 </form>
 
                 <div className="v3-forgot">
-                  <button type="button" className="v3-linkbtn v3-linkbtn-off" onClick={noop} disabled aria-disabled="true">Forgot username?</button>
-                  <button type="button" className="v3-linkbtn v3-linkbtn-off" onClick={noop} disabled aria-disabled="true">Forgot password?</button>
+                  <button type="button" className="v3-linkbtn" onClick={inert('forgot_username')}>Forgot username?</button>
+                  <button type="button" className="v3-linkbtn" onClick={inert('forgot_password')}>Forgot password?</button>
                 </div>
 
                 <div className="v3-divider">or</div>
@@ -230,7 +242,7 @@ export default function SignInPage() {
                   </button>
                 )}
 
-                <button type="button" className="v3-google v3-google-off" onClick={noop} disabled aria-disabled="true">
+                <button type="button" className="v3-google" onClick={inert('google')}>
                   <span className="v3-google-g"><GoogleG /></span>
                   <span className="v3-google-txt">Sign in with Google</span>
                 </button>
